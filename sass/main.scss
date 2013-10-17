@@ -1,0 +1,538 @@
+@import "compass/reset";
+@import "compass/css3/box-sizing";
+
+$mainBGColor: #ccc;
+$itemBGColor: #fff;
+
+$textColor: #333;
+$secondaryTextColor: #888;
+
+$inputColor: #14568D;
+$activeColor: #327CCB;
+$activeBgColor: #ade;
+$selectedColor: #ddd;
+
+$borderColor: #ddd;
+
+$padding: 10px;
+$paddingSmall: 0.3em;
+$margin: 24px;
+
+$navWidth: 240px;
+$headerHeight: 50px;
+
+@mixin item {
+	@include box-sizing(border-box);
+	padding: $padding;
+	background: $itemBGColor;
+}
+
+@mixin hoverbg($clr) {
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+	&:hover {
+		background-color: $clr;
+	}
+}
+
+@mixin hoverpop {
+	&:hover {
+		box-shadow: 0 1px 3px #888;
+	}
+}
+
+@mixin shadow {
+	box-shadow: 0 2px 8px #888;
+}
+
+body {
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	background-color: $mainBGColor;
+	line-height: 150%;
+	color: $textColor;
+}
+
+h1 {
+	font-size: 180%;
+	margin-bottom: .5em;
+}
+
+.searchboxes {
+	width: $navWidth; 
+	overflow: hidden; 
+	input[type=text] {
+		@include box-sizing(border-box);
+		width: 100%;
+		padding: $paddingSmall/2;
+		font-size: 90%;
+		border: 2px solid $inputColor;
+		&:active, &:focus {
+			border-color: $activeColor;
+		}
+	}
+
+	#filter {
+		padding: $paddingSmall;
+		font-size: 120%;
+	}
+
+	h2 {
+		text-transform: uppercase;
+		color: $secondaryTextColor;
+		margin-top: $padding;
+		padding-top: 10px;
+	}
+
+	input[type=checkbox] {
+		display: none;
+	}
+
+	label {
+		@include hoverbg($activeBgColor);
+		padding: $paddingSmall;
+		display: block;
+		margin-bottom: 1px;
+		color: $inputColor;
+		&:before {
+			@include box-sizing(border-box);
+			content: '';
+			display: inline-block;
+			vertical-align: middle;
+			width: 1em;
+			height: 1em;
+			margin-right: $paddingSmall;
+			border: 2px solid $inputColor;
+		}
+	}
+
+	input:checked + label {
+		background-color: $selectedColor;
+		&:before {
+			content: 'X';
+			font-weight: 900;
+			line-height: 0.8em;
+		}
+	}
+
+	ul {
+		max-height: 130px;
+		overflow-y: auto;
+		border: 1px solid $borderColor;
+	}
+
+	img {
+		@include box-sizing(border-box);
+		max-width: 100%;
+		padding: $padding;
+	}
+}
+
+button, input[type=submit] {
+	@include hoverbg($activeColor);
+	@include hoverpop;
+	background-color: $inputColor;
+	border: none;
+	font: inherit;
+	padding: .4em .8em;
+	border-radius: $paddingSmall;
+	color: #fff;
+}
+
+header {
+	position: fixed;
+	font-size: 120%;
+	height: $headerHeight;
+	left:$margin;
+	top:$margin;
+	right:$margin;
+	h1 {
+		padding-left: $padding;
+		display: inline-block;
+		width: $navWidth;
+		cursor: pointer;
+		&:before {
+			content: '';
+			display: inline-block;
+			height: $headerHeight;
+			vertical-align: middle;
+		}
+
+		&:after {
+			content: '?';
+			display: inline-block;
+			background-color: $secondaryTextColor;
+			margin-left: $paddingSmall;
+			opacity: 0.5;
+			font-size: 10px;
+			line-height: 14px;
+			width: 14px;
+			height: 14px;
+			color: #fff;
+			text-align: center;
+			vertical-align: top;
+			border-radius: 50% 50% 50% 0;
+		}
+		&:hover:after {
+			background-color: $inputColor;
+			opacity: 1;
+		}
+	}
+
+	input[type=text] {
+		@include box-sizing(border-box);
+		padding: $paddingSmall;
+		font-size: 120%;
+		border: 2px solid $inputColor;
+		&:active, &:focus {
+			border-color: $activeColor;
+		}
+	}
+}
+
+#searchoptions {
+	position: fixed;
+	left:$margin;
+	top: $headerHeight+$margin+$padding;
+	bottom:$margin;
+	overflow: auto;
+	section {
+		@include item;
+	}
+	footer {
+		@include item;
+	}
+}
+#searchsummary {
+	@include item;
+}
+
+dt {
+    font-weight: bold;
+}
+dd {
+	margin-left: $padding;
+}
+
+#searchactions {
+	right: 0;
+}
+
+#searchresults {
+	@include item;
+	position: fixed;
+	left: $navWidth+$margin+$padding;
+	right:$margin;
+	top: $headerHeight+$margin+$padding;
+	bottom:$margin;
+	overflow-x: auto;
+}
+
+
+.member {
+	@include hoverbg($activeBgColor);
+	cursor: pointer;
+	span {
+		font-size: 90%;
+		color: $secondaryTextColor
+	}
+	&:hover span {
+		color: $textColor;
+	}
+}
+
+table {
+	width: 100%;
+}
+th { 
+	padding: $paddingSmall;
+	text-transform: uppercase;
+	color: $secondaryTextColor;
+}
+.sortable {
+	color: $inputColor;
+	font-weight: 700;
+	cursor: pointer;
+	&:hover {
+		&:before {
+			content: 'Sorter på';
+			position: absolute;
+			font-size: 85%;
+			top: 0;
+		}
+	}
+}
+.sortdesc:after {
+	content: '\25BC';
+}
+.sortasc:after {
+	content: '\25B2';
+}
+td {
+	padding: $paddingSmall;
+	vertical-align: top;
+	border-bottom: 1px solid $borderColor;
+}
+.inactive {
+	font-style: italic;
+	opacity: 0.7;
+}
+
+label, button {
+	cursor: pointer;
+}
+
+// Page navigation controls
+
+#pagenavigation {
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle¨;
+	position: relative;
+	z-index: 11;
+}
+
+// Detailview
+
+#detailcontent {
+	background-color: #fff;
+	position: absolute;
+	padding: $padding;
+	top: $margin*2;
+	left: $navWidth+$margin*2;
+	right: $margin*2;
+	bottom: $margin*2;
+	overflow: auto;
+	z-index: 102;
+
+	ul {
+	    margin-left: 1em;
+	}
+
+	.json-key {
+	    font-weight: bold;
+	}
+
+	dt {
+	    font-weight: bold;
+	}
+	dd {
+		margin-bottom: $padding;
+	}
+
+	.closeBtn {
+		position: absolute;
+		right: $padding;
+		top: $padding;
+	}
+}
+
+#detailmask {
+	position: absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	background-color: rgba(0,0,0,0.3);
+	z-index: 101;
+}
+
+// Tools
+
+#tools {
+	position: absolute;
+	right:$margin;
+	top:$margin;
+
+	label {
+	    position: absolute;
+	    right: 0;
+	    display: block;
+	    width: 30px;
+	    height: 30px;
+		z-index: 10;
+	}
+
+	label span {
+	    position: absolute;
+	    top: 50%;
+	    left: 0;
+	    display: block;
+	    width: 100%;
+	    height: 4px;
+	    margin-top: -2px;
+	    background-color: $inputColor;
+	    font-size: 0px;
+	    user-select: none;
+	    -webkit-transition: background-color 0.2s;
+	    -moz-transition: background-color 0.2s;
+	    transition: background-color 0.2s;
+	}
+
+	label span:before,
+	label span:after {
+	    position: absolute;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    background: $inputColor;
+	    content: '';
+	    -webkit-transition: all 0.2s;
+	    -moz-transition: all 0.2s;
+	    transition: all 0.2s;
+	}
+	label span:before {
+		-webkit-transform: translateY(-250%);
+		-moz-transform: translateY(-250%);
+		transform: translateY(-250%);
+	}
+	 
+	label span:after {
+		-webkit-transform: translateY(250%);
+		-moz-transform: translateY(250%);
+		transform: translateY(250%);
+	}
+
+	label:hover span, label:hover span:after, label:hover span:before {
+		background-color: $activeColor;
+	}
+
+	input:checked + label span:before {
+	    -webkit-transform: translateY(0) rotate(45deg);
+	    -moz-transform: translateY(0) rotate(45deg);
+	    transform: translateY(0) rotate(45deg);
+	}
+	 
+	input:checked + label span:after {
+	    -webkit-transform: translateY(0) rotate(-45deg);
+	    -moz-transform: translateY(0) rotate(-45deg);
+	    transform: translateY(0) rotate(-45deg);
+	}
+
+	input:checked + label span {
+	    background-color: transparent;
+	}
+
+	ul {
+		@include item;
+		visibility: hidden;
+		position: relative;
+		z-index: 10;
+		top:30px;
+		opacity: 0;
+		overflow: hidden;
+		border-bottom: 2px solid #ccc;
+		border-left: 1px solid #ccc;
+		border-right: 1px solid #ccc;
+		-webkit-transition: all 0.3s ease;
+		-moz-transition: all 0.3s ease;
+		transition: all 0.3s ease; 
+	}
+	input:checked ~ ul {
+		visibility: visible;
+		opacity: 1;
+		-webkit-transform: translateY(3px);
+		-moz-transform: translateY(3px);
+		transform: translateY(3px);
+	}
+}
+
+// Tooltip
+
+[data-tooltip] {
+	position: relative;
+
+	&:hover {
+		color: $inputColor;
+	}
+
+	&:before, &:after {
+		z-index: 10;
+		pointer-events: none;
+		-webkit-transition: all 0.3s ease;
+		-moz-transition: all 0.3s ease;
+		transition: all 0.3s ease; 
+	}
+
+	&:hover:before, &:focus:before {
+		visibility: visible;
+		opacity: 1; 
+		-webkit-transform: translateY(3px);
+		-moz-transform: translateY(3px);
+		transform: translateY(3px);
+	}
+
+	&:after {
+		content: '?';
+		display: inline-block;
+		background-color: $secondaryTextColor;
+		margin-left: $paddingSmall;
+		font-size: 10px;
+		line-height: 14px;
+		width: 14px;
+		height: 14px;
+		color: #fff;
+		text-align: center;
+		vertical-align: top;
+		border-radius: 50% 50% 50% 0;
+	}
+
+	&:hover:after {
+		background-color: $inputColor;
+	}
+
+	&:before {
+		position: absolute;
+		top: 100%;
+		left: $paddingSmall;
+		opacity: 0;
+		visibility: hidden;
+		content: attr(data-tooltip);
+		text-transform: none;
+		background: $inputColor;
+		padding: $paddingSmall;
+		width: $navWidth - 2*$margin;
+		color: white;
+		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3); 
+	}
+}
+
+
+// Scrolling
+
+	::-webkit-scrollbar {
+	    width: 16px;
+	}
+	 
+	/* Track */
+	::-webkit-scrollbar-track {
+		background-color: $borderColor;
+	}
+	 
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background-color: $inputColor;
+		border: 2px solid $borderColor;
+		cursor: pointer;
+		border-radius: $paddingSmall;
+	}
+
+@media only screen and (max-device-width: 600px) {
+
+	#searchoptions {
+		position: relative;
+		left:0;
+		right:0;
+		top:0;
+		max-height: $navWidth;
+	}
+
+	#searchresults {
+		position: relative;
+		left: $navWidth+$margin+$padding;
+		right:0;
+		left:0;
+	}
+
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Hundesøk</title>
+		<link rel="icon" type="image/png" href="" />
+		<link href="css/main.css" rel="stylesheet" type="text/css">
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
+	</head>
+	<body style="background-color: #E8E2C3;">
+
+		<header>
+			<h1>Hundesøk</h1>
+			<input type="text" name="filter" id="filter" placeholder="Søk på navn, ID m.m." autofocus size="58"/>
+			
+			<div id="pagenavigation"></div>
+		</header>
+
+		<div id="tools">
+			<input type="checkbox" id="menutrigger" style="display:none">
+			<label for="menutrigger"><span>Menu</span></label>
+			<ul>
+				<li><button id="downloadCsvBtn">Last ned CSV</button></li>
+			</ul>
+		</div>
+
+		<div id="searchoptions" class="searchboxes">
+
+			<section id="searchfacets"></section>
+			
+			<div id="searchsummary"></div>
+
+			<footer>
+				<h2>Profil</h2>
+				<form method="post" action="/sso/login?redirectURI=/MemberFrontend/dogs.html" id="loginform">
+					<input type="submit" value="Log in" id="loginbutton" class="butt">
+					<a href="/sso/logout?redirectURI=/MemberFrontend/dogs.html" onClick="auth.logout();" id="logoutbutton">Log out</a>
+				</form>
+				<br/>
+				<img src="img/NKK-logo.png" alt="NKK Logo">
+			</footer>
+		</div>
+
+		<div id="searchresults">
+			<table>
+				<thead>
+					<tr>
+						<th class="sortable sortasc" id="name">Hund</th>
+						<th class="sortable" id="breed">Rase</th>
+						<th>Hundeid</th>
+						<th>Eier</th>
+						<th class="sortable" id="postalCode">Postnr</th>
+						<th>Adresse</th>
+						<th>E-mail</th>
+						<th>Tlf</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+
+		<div id="detail" style="display:none;">
+			<div id="detailmask"></div>
+			<div id="detailcontent"></div>
+		</div>
+
+		<div id="mailform" style="display:none;">
+			<button class="closeBtn">x</button>
+			<h1>Send mail</h1>
+		</div>
+
+		<script id="tabletemplate" type="text/x-dot-template">
+			<tr class="member" id="{{=it.counter}}">
+				<td>{{=it.name}}</td>
+				<td>{{=it.breed}}</td>
+				<td><span>{{=it.id}}</span></td>
+				{{? it.owner }}
+				<td><span>{{=it.owner.lastName}}, {{=it.owner.firstName}}</span></td>
+				<td><span>{{=it.postalCode}}</span></td>
+				<td><span>{{~ it.owner.contactinfo.addresses :address:i}}{{=address.value}}<br/>{{~}}</span></td>
+				<td><span>{{~ it.owner.contactinfo.emails :email:i}}{{=email.value}}<br/>{{~}}</span></td>
+				<td><span>{{~ it.owner.contactinfo.phoneNumbers :number:i }}{{=number.value}}<br/>{{~}}</span></td>
+				{{?}}
+			</tr>
+		</script> 
+		<script id="detailtemplate" type="text/x-dot-template">
+			<button class="closeBtn">x</button>
+			<h1>{{=it.name}}</h1>
+			<dl>
+				<dt>Rase</dt>
+				<dd>{{=it.breed}}</dd>
+				{{? it.owner }}
+				<dt>Eier</dt>
+				<dd>{{=it.owner.lastName}}, {{=it.owner.firstName}}</dd>
+				<dt>Eiers PersonId</dt>
+				<dd>{{=it.id}}</dd>
+				<dt>Postnummer</dt>
+				<dd>{{=it.postalCode}}</dd>
+				<dt>Adresse</dt>
+				<dd>{{~ it.owner.contactinfo.addresses :address:i}}{{=address.value}}<br/>{{~}}</dd>
+				<dt>E-mail</dt>
+				<dd>{{~ it.owner.contactinfo.emails :email:i}}{{=email.value}}<br/>{{~}}</dd>
+				<dt>Telefon</dt>
+				<dd>{{~ it.owner.contactinfo.phoneNumbers :number:i }}{{=number.value}}<br/>{{~}}</dd>
+				{{?}}
+			</dl>
+		</script> 
+
+		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/doT.min.js"></script>
+		<script type="text/javascript" src="js/auth.js"></script>
+		<script type="text/javascript" src="js/dogsearch.js"></script>
+
+	</body>
+</html>
