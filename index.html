@@ -48,12 +48,11 @@
 					<tr>
 						<th class="sortable sortasc" id="name">Hund</th>
 						<th class="sortable" id="breed">Rase</th>
+						<th class="sortable" id="gender">Kjønn</th>
+						<th class="sortable" id="born">Født</th>
+						<th class="sortable" id="registrationDate">Registrert</th>
 						<th>Hundeid</th>
-						<th>Eier</th>
 						<th class="sortable" id="postalCode">Postnr</th>
-						<th>Adresse</th>
-						<th>E-mail</th>
-						<th>Tlf</th>
 					</tr>
 				</thead>
 				<tbody></tbody>
@@ -74,14 +73,11 @@
 			<tr class="member" id="{{=it.counter}}">
 				<td>{{=it.name}}</td>
 				<td>{{=it.breed}}</td>
-				<td><span>{{=it.id}}</span></td>
-				{{? it.owner }}
-				<td><span>{{=it.owner.lastName}}, {{=it.owner.firstName}}</span></td>
-				<td><span>{{=it.postalCode}}</span></td>
-				<td><span>{{~ it.owner.contactinfo.addresses :address:i}}{{=address.value}}<br/>{{~}}</span></td>
-				<td><span>{{~ it.owner.contactinfo.emails :email:i}}{{=email.value}}<br/>{{~}}</span></td>
-				<td><span>{{~ it.owner.contactinfo.phoneNumbers :number:i }}{{=number.value}}<br/>{{~}}</span></td>
-				{{?}}
+				<td><span>{{=it.gender}}<span></td>
+				<td><span>{{?it.born}}{{=it.born}}{{??}}-{{?}}<span></td>
+				<td><span>{{?it.registrationDate}}{{=it.registrationDate}}{{??}}-{{?}}<span></td>
+				<td><span>{{~it.ids:id:i}}{{=id}}<br/>{{~}}</span></td>
+				<td><span>{{?it.postalCode}}{{=it.postalCode}}{{??}}-{{?}}</span></td>
 			</tr>
 		</script> 
 		<script id="detailtemplate" type="text/x-dot-template">
@@ -90,20 +86,12 @@
 			<dl>
 				<dt>Rase</dt>
 				<dd>{{=it.breed}}</dd>
-				{{? it.owner }}
-				<dt>Eier</dt>
-				<dd>{{=it.owner.lastName}}, {{=it.owner.firstName}}</dd>
-				<dt>Eiers PersonId</dt>
-				<dd>{{=it.id}}</dd>
+				<dt>Kjønn</dt>
+				<dd>{{=it.gender}}</dd>
+				<dt>ID-nummer</dt>
+				<dd>{{~it.details.ids:id:i}}{{=id.type}}: {{=id.value}}<br/>{{~}}</dd>
 				<dt>Postnummer</dt>
 				<dd>{{=it.postalCode}}</dd>
-				<dt>Adresse</dt>
-				<dd>{{~ it.owner.contactinfo.addresses :address:i}}{{=address.value}}<br/>{{~}}</dd>
-				<dt>E-mail</dt>
-				<dd>{{~ it.owner.contactinfo.emails :email:i}}{{=email.value}}<br/>{{~}}</dd>
-				<dt>Telefon</dt>
-				<dd>{{~ it.owner.contactinfo.phoneNumbers :number:i }}{{=number.value}}<br/>{{~}}</dd>
-				{{?}}
 			</dl>
 		</script> 
 

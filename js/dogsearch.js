@@ -7,15 +7,10 @@
 		if(data.response.numFound > 0){
 			var dogs = data.response.docs;
 			var dogslength = dogs.length;
-			var isAuthenticated = auth.isAuthenticated();
 			for(var i=0;i<dogslength;i++) {
 				try {
 					var dog = dogs[i];
-					if( isAuthenticated ) {
-						dog.owner = jQuery.parseJSON( dog.json_detailed );
-					} else {
-						dog.owner = false;
-					}
+					dog.details = jQuery.parseJSON( dog.json_detailed );
 					dog.counter = i;
 					html += dogRenderer(dog);
 					// console.log(member);
@@ -24,7 +19,7 @@
 				}
 			}
 		} else {
-			html = "Ingen personer funnet" + getSearchSummary();
+			html = "Ingen hunder funnet" + getSearchSummary();
 		}
 		$("#searchresults tbody").html(html);
 	}
@@ -67,6 +62,15 @@
 		breed: ['breed', ''],
 		postalCode: ['postalCode', '']
 	};
+
+	function setSortingParameters() {
+		sortingParameters = [];
+		$('#searchresults').find('th').each( function(index, element) {
+			if(element.id != '') {
+				sortingParameters[element.id] = [element.id, ''];
+			}
+		});
+	}
 
 	function toggleSorting(param, t) {
 		for (var k in sortingParameters) {
@@ -133,7 +137,7 @@
 
 /* Search */
 
-	var solrurl = "/solr/dogs/select",
+	var solrurl = "/dogservice/dogs/select",
 	solrdata = {
 		q:'*',
 		wt:'json',
@@ -229,6 +233,8 @@
 			$('#loginform').before('Du må logge inn.');
 		    $('#logoutbutton').remove();
 		}
+
+		setSortingParameters();
 
 		$('#filter').keyup( function(event) {
 			prepSearch(this);
