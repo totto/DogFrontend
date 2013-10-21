@@ -32,7 +32,7 @@ $.getScript( "https://www.google.com/jsapi", function() {
     var it = customData;
     it.data.splice(1,999);
     for(y=it.year-it.range;y<=it.year;y++) {
-      var response = getDogs('name:*'+it.query+'*', it.getYearSpan(y), y);
+      var response = getDogs('name:* '+it.query+' *', it.getYearSpan(y), y);
     }
   }
 
@@ -59,6 +59,7 @@ $.getScript( "https://www.google.com/jsapi", function() {
   }
 
   $('#graphform').submit(function(event) {
+    event.preventDefault();
     document.getElementById(target).innerHTML = '';
     customData.query = document.getElementById('query').value;
     customData.data[0][1] = customData.query;
@@ -68,7 +69,7 @@ $.getScript( "https://www.google.com/jsapi", function() {
     } else {
       renderData();
     }
-    event.preventDefault();
+    return false;
   });
 
   function test() {
