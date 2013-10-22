@@ -124,15 +124,27 @@
 	function bindDateFacetInput(facetname) {
 		var opt = {
 			onSet: function(event) {
-				setDateFacet(facetname, this.$node[0].dataset.type, this.get());
-				limitDateFacetInput();
+				var thistype = "";
+				var element = this.$node[0];
+				if(element.dataset !== undefined) { // standard approach
+				    thistype = element.dataset.type;
+				} else {
+				    thistype = element.getAttribute('data-type'); // IE approach
+				}
+				setDateFacet(facetname, thistype, this.get());
+				if ( thistype == "Fra") {
+					var facetvalue = "Til";
+					limitDateFacetInput(facetname, thistype, facetvalue);
+				}
 		    }
 		}
 		$('#'+facetname+'Fra').pickadate(opt);
 		$('#'+facetname+'Til').pickadate(opt);
 	}
 
-	// @method setDateFacet - Sets value for a given facetname to the dateFacets-object
+	// @method setDateFacet
+	// - Sets value for a given facetname to the dateFacets-object
+	// - Calls @method updateFq to build facets (solrdata.fq) and do a new search with the chosen facets
 	// @param {String} facetname - The name of the facet, e.g. registrationDate
 	// @param {String} facetvalue - 'Fra' or 'Til' (from or to-value)
 	// @param {String} value - The actual date-value in the format 'yyyy-mm-dd'
@@ -144,8 +156,10 @@
 		}
 		if( value == '' ) {
 			value = '*';
-		} else {
+		} else if (facetvalue == "Fra") {
 			value += 'T00:00:00Z';
+		} else if (facetvalue == "Til") {
+			value += 'T23:59:59Z';
 		}
 		dateFacets[facetname][index] = value;
 		updateFq();
@@ -163,8 +177,39 @@
 		return fq;
 	}
 
-	function limitDateFacetInput() {
+	function limitDateFacetInput(facetname, thistype, facetvalue) {
+		
+		var $frominput = $('#'+facetname+thistype);
+		var $toinput = $('#'+facetname+facetvalue);
+		
+		var fromdate = $frominput.pickadate('picker').get().split('-');
+		var todate = $toinput.pickadate('picker').get().split('-');
 
+		fromdate = stringToDate(fromdate);
+		
+		$toinput.pickadate('picker').set({
+			min: fromdate
+		})
+		if (todate) {
+			todate = stringToDate(todate);
+
+			if( fromdate > todate ) {
+				$toinput.pickadate('picker').set({
+					min: fromdate,
+					select: fromdate
+				});
+			}
+		}
+
+	}
+
+	// @method stringToDate 
+	// - Turns a yyyy-mm-dd to a date object.
+	// - Month starts from 0, for some reason.
+	// @param {String} date - in format yyy-mm-dd
+	// @return {Date} - Date-object converted from String
+	function stringToDate(date) {
+		return new Date(date[0], date[1]-1, date[2]);
 	}
 
 /* FQ Facets */
@@ -262,7 +307,6 @@
 			}
 		}
 		results = results.concat( getDateFacets() );
-		console.log(results);
 		solrdata.fq = results;
 		gotoPage(1);
 		buildSearchSummary();
