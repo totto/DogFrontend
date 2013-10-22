@@ -32,7 +32,7 @@ $.getScript( "https://www.google.com/jsapi", function() {
     var it = customData;
     it.data.splice(1,999);
     for(y=it.year-it.range;y<=it.year;y++) {
-      var response = getDogs('name:* '+it.query+' *', it.getYearSpan(y), y);
+      var response = getDogs('name:*'+it.query+'*', it.getYearSpan(y), y);
     }
   }
 

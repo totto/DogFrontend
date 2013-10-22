@@ -5,14 +5,7 @@
 	var dict = {
 		'false': 'Nei',
 		'true': 'Ja',
-		'breeds': 'Hunderaser',
-		'clubs': 'Klubber',
-		'allowmailfromnkk': 'Vil ha infomail',
-		'allowmailads': 'Vil ha reklame',
-		'lastactive': 'Sist aktiv',
-		'lastname': 'Etternavn',
-		'firstname': 'Fornavn',
-		'postalcode': 'Postnummer'
+		'breed': 'Hunderaser'
 	}
 
 	function getLabel(word) {
@@ -27,17 +20,7 @@
 	var tooltip = {
 		'false': 'Nei',
 		'true': 'Ja',
-		'breeds': 'Filtrerer etter alle personer som eier en hund av en gitt rase. Kan krysse av for flere, da finner man alle som eier minst 1 av de avkryssede rasene. Søkeboksen ovenfor avkrysningsboksene kan brukes til å finne en rase kjapt.',
-		'clubs': 'Filtrerer etter alle personer som er medlem av en gitt klubb. Kan krysse av for flere, da finner man alle som er medlem i minst 1 av de avkryssede klubbene. Søkeboksen over avkrysningsboksene kan brukes til å finne en klubb i listen.',
-		'allowmailfromnkk': 'Kryss av på Ja for å finne alle som har registrert at de vil motta infomail fra NKK.',
-		'allowmailads': 'Kryss av på Ja for å finne alle som har registrert at de vil motta reklame fra NKK.',
-		'lastactive': 'Finner de som har hatt aktivitet i NKKs systemer i de gitte periodene.',
-		'lastname': 'Etternavn',
-		'firstname': 'Fornavn',
-		'postalcode': 'Postnummer',
-		'medlemstype': 'Filtrer etter medlemsstype.',
-		'betalingsstatus': 'Skriv inn klubbnavn, og velg betalingsstatus: paid, partial, eller unpaid. Man får da opp de som har den gitte betalingsstatusen for den gitte klubben i gjeldende år.',
-		'sistaktiv': 'Finner de som har hatt aktivitet i NKKs systemer i de gitte periodene.'
+		'breed': 'Filtrerer etter alle personer som eier en hund av en gitt rase. Kan krysse av for flere, da finner man alle som eier minst 1 av de avkryssede rasene. Søkeboksen ovenfor avkrysningsboksene kan brukes til å finne en rase kjapt.'
 	}
 
 	function getTooltip(word) {
@@ -115,11 +98,84 @@
 		}
 	}
 
+/* Date-facets */
+
+	var dateInputTemplate = '{{=it.value}}<input type="text" data-type="{{=it.value}}" id="{{=it.name}}{{=it.value}}" placeholder="Velg dato"/>';
+	var dateInputRenderer = doT.template(dateInputTemplate);
+	// dateFacets format: { facetname: [fromDate, toDate] }
+	var dateFacets = {};
+
+	// @method getDateFacetInput - Returns inputfields for a given facetname. After insertion, call @method bindDateFacetInput to enable datepicker functionality
+	// @param {String} facetname - The name of the facet, e.g. registrationDate
+	// @return {String} - Returns two inputfields as a string for insertion into HTML
+	function getDateFacetInput(facetname) {
+		var obj = {
+			name: facetname,
+			value: "Fra"
+		};
+		var html = dateInputRenderer(obj);
+		obj.value = "Til";
+		html += dateInputRenderer(obj);
+		return html;
+	}
+
+	// @method bindDateFacetInput - Binds pickadate.js-datepicker to the inputfields. Called after insertion of inputfields from @method getDateFacetInput
+	// @param {String} facetname - The name of the facet, e.g. registrationDate
+	function bindDateFacetInput(facetname) {
+		var opt = {
+			onSet: function(event) {
+				setDateFacet(facetname, this.$node[0].dataset.type, this.get());
+				limitDateFacetInput();
+		    }
+		}
+		$('#'+facetname+'Fra').pickadate(opt);
+		$('#'+facetname+'Til').pickadate(opt);
+	}
+
+	// @method setDateFacet - Sets value for a given facetname to the dateFacets-object
+	// @param {String} facetname - The name of the facet, e.g. registrationDate
+	// @param {String} facetvalue - 'Fra' or 'Til' (from or to-value)
+	// @param {String} value - The actual date-value in the format 'yyyy-mm-dd'
+	function setDateFacet(facetname, facetvalue, value) {
+		var facetvalues = ['Fra', 'Til']
+		var index = facetvalues.indexOf(facetvalue);
+		if(typeof dateFacets[facetname] === 'undefined') {
+			dateFacets[facetname] = ['*','*'];
+		}
+		if( value == '' ) {
+			value = '*';
+		} else {
+			value += 'T00:00:00Z';
+		}
+		dateFacets[facetname][index] = value;
+		updateFq();
+	}
+
+	// @method getDateFacet
+	// @return {Array} - Returns array for insertion to solr-fq, on the form "facet1:[from TO to]"
+	function getDateFacets() {
+		var fq = [];
+		for( key in dateFacets ) {
+			if(dateFacets[key].join('') != '**') {
+				fq.push( key + ':[' + dateFacets[key].join(' TO ') + ']' );
+			}
+		}
+		return fq;
+	}
+
+	function limitDateFacetInput() {
+
+	}
+
 /* FQ Facets */
 
+	// @method showFacets 
+	// - Generates and adds the controls for facets returned from the first solr-search. 
+	// - Facet with regular checkboxes that we want to show must be in solrdata['facet.field']
+	// - Requires getLabel and getToolTip + other control-generators
+	// @param {Object} facets - facetdata from solr-search
 	function showFacets(facets) {
 		var facethtml = "";
-		var facetsWithFilter = ['breeds'];
 		for( var facet in facets ){
 			var content = "";
 			var facetLength = facets[facet].length;
@@ -135,23 +191,19 @@
 				content += facetRenderer(facetdata);
 			}
 			var facetfilter = "";
+			// Insert textinput for filtering the list of checkboxes for lists longer than 10 items
 			if( facetLength > 10 ) facetfilter = '<input type="text" class="facetfilter"/>';
 			facethtml += '<h2 '+getTooltip(facet.replace('_exact',''))+'>'+getLabel(facet.replace('_exact',''))+'</h2>'+facetfilter+'<ul>'+content+'</ul>';
 		};
 
-		var lastActiveFacet = getLastActiveFacet([
-			["Siste 7 dager","[NOW-7DAYS TO NOW]"],
-			["7 dager - 1 måned", "[NOW-1MONTH TO NOW-7DAYS]"],
-			["1 måned - 3 måneder", "[NOW-3MONTHS TO NOW-1MONTH]"],
-			["3 måneder - 1 år", "[NOW-1YEAR TO NOW-3MONTHS]"],
-			["1 år - tidligere", "[* TO NOW-1YEAR]"]
-		]);
+		facethtml += '<h2>Registrert</h2>'+getDateFacetInput('registrationDate');
+		facethtml += '<h2>Født</h2>'+getDateFacetInput('born');
 
-		// facethtml += '<h2 '+getTooltip('sistaktiv')+'>Sist aktiv</h2>'+'<ul>'+lastActiveFacet+'</ul>';
-		// facethtml += '<h2 '+getTooltip('betalingsstatus')+'>Betalingsstatus</h2>'+generatePaymentControls();
-		// facethtml += '<h2 '+getTooltip('medlemstype')+'>Medlemstype</h2>'+generateMembertypeControls();
-
+		// Insert facets into div#searchfacets 
 		$("#searchfacets").html( facethtml );
+
+		bindDateFacetInput('registrationDate');
+		bindDateFacetInput('born');
 
 		// Autocomplete payment clubs
 		$('#paymentClub').autocomplete({
@@ -159,23 +211,9 @@
 		});
 	}
 
-	function getLastActiveFacet(gaps) {
-		var facetdata;
-		var ret = "";
-		//Siste uke
-		for (var i = 0; i < gaps.length;i++) {
-			facetdata = {
-				facetname: 'lastActive',
-				facet: gaps[i][1],
-				label: getLabel(gaps[i][0]),
-				cls: 'facetcheckbox',
-				id: 'lastActive_'+gaps[i][1].replace(/\W/g,'') // \W Matches any character not in a-z A-Z 0-9
-			};
-			ret += facetRenderer(facetdata);
-		}
-		return ret;
-	}
-
+	// @method filterFacetList
+	// - User jQuery to filter out the list of checkboxes for a list of facets generated using @method showFacets
+	// - Must bind a listener to keyup event on the facetfilterclass within the container
 	function filterFacetList(t) {
         var value = $(t).val();
 		$(t).next().children().each(function(){
@@ -219,20 +257,12 @@
 		var result = "";
 		for( var f in facets ) {
 			if( facets[f].length > 0 ) {
-				result = f + ":(";
-				for(i=0;i<facets[f].length;i++) {
-					if( facets[f][i][0]=='[' ){
-						result += facets[f][i];
-					} else {
-						result += '"'+facets[f][i]+'"';
-					}
-					if(facets[f][+i+1] !== undefined) 
-						result+=" OR ";
-				}
-				result += ")";
+				result = f + ':("' + facets[f].join('" OR "') + '")';
+				results.push(result);
 			}
-			results.push(result);
 		}
+		results = results.concat( getDateFacets() );
+		console.log(results);
 		solrdata.fq = results;
 		gotoPage(1);
 		buildSearchSummary();
@@ -481,7 +511,6 @@
 
 	function applyInitData() {
 		var	initData = getUrlVars();
-		console.log(initData);
 		if( initData ) {
 			for( key in initData ) {
 				switch(key) {
