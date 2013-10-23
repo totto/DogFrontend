@@ -6,18 +6,21 @@
  * more than what’s here. Style the `.picker__holder` instead.
  */
 .picker {
-  font-size: 16px;
   text-align: left;
   line-height: 1.2;
-  color: #000000;
   position: absolute;
   z-index: 10000;
 }
 /**
  * The picker input element.
  */
+.datelabel {
+  width: 25%;
+  display: inline-block;
+}
 .picker__input {
   cursor: default;
+  width: 60% !important;
 }
 /**
  * When the picker is opened, the input element is “activated”.

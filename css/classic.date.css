@@ -35,19 +35,18 @@
  */
 .picker__select--month,
 .picker__select--year {
-  font-size: .8em;
+  font-size: .9em;
   border: 1px solid #b7b7b7;
-  height: 2.5em;
-  padding: .5em .25em;
-  margin-left: .25em;
-  margin-right: .25em;
-  margin-top: -0.5em;
+  padding: .25em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: .25em; /* Custom - Originally -1em */
 }
 .picker__select--month {
-  width: 35%;
+  width: 45%;
 }
 .picker__select--year {
-  width: 22.5%;
+  width: 35%; /* Custom */
 }
 .picker__select--month:focus,
 .picker__select--year:focus {
@@ -59,25 +58,21 @@
 .picker__nav--prev,
 .picker__nav--next {
   position: absolute;
-  top: -0.33em;
-  padding: .5em 1.33em;
-  width: 1em;
-  height: 1em;
+  top: .5em;
+  cursor: pointer;
 }
 .picker__nav--prev {
-  left: -1em;
-  padding-right: 1.5em;
+  left: -.5em;
 }
 .picker__nav--next {
-  right: -1em;
-  padding-left: 1.5em;
+  right: -.5em;
 }
 .picker__nav--prev:before,
 .picker__nav--next:before {
   content: " ";
   border-top: .5em solid transparent;
   border-bottom: .5em solid transparent;
-  border-right: 0.75em solid #000000;
+  border-right: 0.75em solid #14568D;
   width: 0;
   height: 0;
   display: block;
@@ -85,13 +80,13 @@
 }
 .picker__nav--next:before {
   border-right: 0;
-  border-left: 0.75em solid #000000;
+  border-left: 0.75em solid #14568D;
 }
-.picker__nav--prev:hover,
+.picker__nav--prev:hover {
+border-left-color: #327CCB;
+}
 .picker__nav--next:hover {
-  cursor: pointer;
-  color: #000000;
-  background: #b1dcfb;
+border-right-color: #327CCB;
 }
 .picker__nav--disabled,
 .picker__nav--disabled:hover,
@@ -129,7 +124,7 @@
  */
 .picker__weekday {
   width: 14.285714286%;
-  font-size: .75em;
+  font-size: .8em;
   padding-bottom: .25em;
   color: #999999;
   font-weight: 500;
