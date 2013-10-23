@@ -5,7 +5,10 @@
 	var dict = {
 		'false': 'Nei',
 		'true': 'Ja',
-		'breed': 'Hunderaser'
+		'breed': 'Hunderaser',
+		'gender': 'Kjønn',
+		'registrationdate': 'Registrert',
+		'born': 'Født'
 	}
 
 	function getLabel(word) {
@@ -20,7 +23,9 @@
 	var tooltip = {
 		'false': 'Nei',
 		'true': 'Ja',
-		'breed': 'Filtrerer etter alle personer som eier en hund av en gitt rase. Kan krysse av for flere, da finner man alle som eier minst 1 av de avkryssede rasene. Søkeboksen ovenfor avkrysningsboksene kan brukes til å finne en rase kjapt.'
+		'breed': 'Filtrerer etter alle personer som eier en hund av en gitt rase. Kan krysse av for flere, da finner man alle som eier minst 1 av de avkryssede rasene. Søkeboksen ovenfor avkrysningsboksene kan brukes til å finne en rase kjapt.',
+		'registrationdate': 'Viser kun hunder registrert mellom disse to datoene. Kan sette kun en av disse, da gjelder det uten øvre eller nedre grense.',
+		'born': 'Viser kun hunder født mellom disse to datoene. Kan sette kun en av disse, da gjelder det uten øvre eller nedre grense.'
 	}
 
 	function getTooltip(word) {
@@ -100,7 +105,7 @@
 
 /* Date-facets */
 
-	var dateInputTemplate = '{{=it.value}}<input type="text" data-type="{{=it.value}}" id="{{=it.name}}{{=it.value}}" placeholder="Velg dato"/>';
+	var dateInputTemplate = '<span class="datelabel">{{=it.value}}</span><input type="text" data-type="{{=it.value}}" id="{{=it.name}}{{=it.value}}" placeholder="Velg dato"/>';
 	var dateInputRenderer = doT.template(dateInputTemplate);
 	// dateFacets format: { facetname: [fromDate, toDate] }
 	var dateFacets = {};
@@ -109,28 +114,28 @@
 	// @param {String} facetname - The name of the facet, e.g. registrationDate
 	// @return {String} - Returns two inputfields as a string for insertion into HTML
 	function getDateFacetInput(facetname) {
+		var html = '<div><h2 '+getTooltip(facetname)+'>'+getLabel(facetname)+'</h2>';
+		html+='<div class="datefacet">';
 		var obj = {
 			name: facetname,
 			value: "Fra"
 		};
-		var html = dateInputRenderer(obj);
+		html += dateInputRenderer(obj);
 		obj.value = "Til";
 		html += dateInputRenderer(obj);
-		return html;
+		return html+'</div></div>';
 	}
 
 	// @method bindDateFacetInput - Binds pickadate.js-datepicker to the inputfields. Called after insertion of inputfields from @method getDateFacetInput
 	// @param {String} facetname - The name of the facet, e.g. registrationDate
 	function bindDateFacetInput(facetname) {
 		var opt = {
+			selectYears: 30,
+			selectMonths: true,
+			max: new Date(),
 			onSet: function(event) {
-				var thistype = "";
-				var element = this.$node[0];
-				if(element.dataset !== undefined) { // standard approach
-				    thistype = element.dataset.type;
-				} else {
-				    thistype = element.getAttribute('data-type'); // IE approach
-				}
+				var element = $(this.$node[0]);
+				var thistype = element.data('type');
 				setDateFacet(facetname, thistype, this.get());
 				if ( thistype == "Fra") {
 					var facetvalue = "Til";
@@ -177,38 +182,61 @@
 		return fq;
 	}
 
+	// @method getUrlDateFacet
+	// @return {Array} - Returns array for insertion to solr-fq, on the form "facet1:[from TO to]"
+	function getUrlDateFacets() {
+		var fq = [];
+		var types = ['Fra', 'Til'];
+		for( key in dateFacets ) {
+			for(var i=0; i<2; i++) {
+				if(dateFacets[key][i] != '*') {
+					fq.push( 'fqrange=' + key + types[i] + '_' + dateFacets[key][i].substring(0,10) );
+				}
+			}
+		}
+		return fq;
+	}
+
 	function limitDateFacetInput(facetname, thistype, facetvalue) {
-		
 		var $frominput = $('#'+facetname+thistype);
 		var $toinput = $('#'+facetname+facetvalue);
 		
 		var fromdate = $frominput.pickadate('picker').get().split('-');
 		var todate = $toinput.pickadate('picker').get().split('-');
 
-		fromdate = stringToDate(fromdate);
-		
-		$toinput.pickadate('picker').set({
-			min: fromdate
-		})
-		if (todate) {
-			todate = stringToDate(todate);
+		if( fromdate[0]=='' ) {
+			$toinput.pickadate('picker').set({
+				min: undefined
+			});
+		} else {
 
-			if( fromdate > todate ) {
-				$toinput.pickadate('picker').set({
-					min: fromdate,
-					select: fromdate
-				});
+			fromdate = arrayToDate(fromdate);
+			
+			$toinput.pickadate('picker').set({
+				min: fromdate
+			})
+
+			if ( todate[0]!='' ) {
+				todate = arrayToDate(todate);
+
+				if( fromdate > todate ) {
+					$toinput.pickadate('picker').set({
+						min: fromdate,
+						select: fromdate
+					});
+				}
 			}
+
 		}
 
 	}
 
-	// @method stringToDate 
-	// - Turns a yyyy-mm-dd to a date object.
-	// - Month starts from 0, for some reason.
-	// @param {String} date - in format yyy-mm-dd
+	// @method arrayToDate 
+	// - Turns an array [yyyy, mm, dd] to a date object.
+	// - NOTE! Month starts from 0 - e.g. 0 = January, 3 = april
+	// @param {array} date - in format [yyyy, mm, dd]
 	// @return {Date} - Date-object converted from String
-	function stringToDate(date) {
+	function arrayToDate(date) {
 		return new Date(date[0], date[1]-1, date[2]);
 	}
 
@@ -238,11 +266,11 @@
 			var facetfilter = "";
 			// Insert textinput for filtering the list of checkboxes for lists longer than 10 items
 			if( facetLength > 10 ) facetfilter = '<input type="text" class="facetfilter"/>';
-			facethtml += '<h2 '+getTooltip(facet.replace('_exact',''))+'>'+getLabel(facet.replace('_exact',''))+'</h2>'+facetfilter+'<ul>'+content+'</ul>';
+			facethtml += '<div><h2 '+getTooltip(facet.replace('_exact',''))+'>'+getLabel(facet.replace('_exact',''))+'</h2>'+facetfilter+'<ul>'+content+'</ul></div>';
 		};
 
-		facethtml += '<h2>Registrert</h2>'+getDateFacetInput('registrationDate');
-		facethtml += '<h2>Født</h2>'+getDateFacetInput('born');
+		facethtml += getDateFacetInput('registrationDate');
+		facethtml += getDateFacetInput('born');
 
 		// Insert facets into div#searchfacets 
 		$("#searchfacets").html( facethtml );
@@ -332,9 +360,12 @@
 					}
 				});
 			}
-			if( $(this).is('#paymentList') ) {
+			if( $(this).is('.datefacet') ) {
 				$(this).children().each( function() {
-					summary +=  '<dd>'+$(this).html()+'</dd>';
+					var $e = $(this);
+					if(  $e.is('input') ) {
+						summary +=  '<dd>'+$e.data('type') + ': ' + $e.val()+'</dd>';
+					}
 				});
 			}
 		});
@@ -505,25 +536,25 @@
 			var newurl = location.origin + location.pathname;
 
 			var urlData = [];
+
+			// Add search query
 			filtervalue = document.getElementById('filter').value;
 			if( filtervalue.length > 0 ){
 				urlData.push("q="+filtervalue);
 			}
-			$('#searchfacets').children().each( function( ) {
-				if( $(this).is('ul') ) {
-					$(this).children().each( function() {
-						var filterCheckbox = $(this).children().first();
-						if( filterCheckbox.prop('checked') ) {
-							urlData.push( filterCheckbox.prop('id').split('_').join("=") );
-						}
-					});
-				}
-				if( $(this).is('#paymentList') ) {
-					$(this).children().each( function() {
-						urlData.push("payment=" + $(this).val() );
-					});
+
+			// Add checked checkboxes
+			$('#searchfacets').find('ul').children().each( function( ) {
+				var filterCheckbox = $(this).children().first();
+				if( filterCheckbox.prop('checked') ) {
+					urlData.push( filterCheckbox.prop('id').split('_').join("=") );
 				}
 			});
+
+			// Add dates
+			urlData = urlData.concat( getUrlDateFacets() );
+
+			// Add page - TODO: Fix page rendering for initiating data
 			if( currentPage > 1 ) {
 				urlData.push("page="+currentPage);
 			}
@@ -556,7 +587,7 @@
 	function applyInitData() {
 		var	initData = getUrlVars();
 		if( initData ) {
-			for( key in initData ) {
+			for( var key in initData ) {
 				switch(key) {
 					case 'q':
 						document.getElementById('filter').value = decodeURI( initData[key][0] );
@@ -568,14 +599,23 @@
 						}
 						break;
 					case 'payment':
-						for(var i=0, l = initData[key].length; i<l; i++) {
+						for(i=0, l = initData[key].length; i<l; i++) {
 							var p = decodeURI( initData[key][i] ).split('_');
 							addPayment(p[0],p[1]);
 						}
 						break;
+					case 'fqrange':
+						var l = initData[key].length;
+						for(k=l-1; k>=0; k--) {
+							var fqrange = initData[key][k].split('_');
+							$('#'+fqrange[0]).pickadate('picker').set( 'select', Date.parse(fqrange[1]) );
+						}
+						break;
 					default:
-					for(var i=0, l = initData[key].length; i<l; i++) {
-						$( "#"+key+"_"+initData[key][i] ).click();
+					for(i=0, l = initData[key].length; i<l; i++) {
+						if( typeof initData[key][i] !== 'undefined' ) {
+							$( "#"+key+"_"+initData[key][i] ).click();
+						}
 					}
 				}
 			}
@@ -633,7 +673,6 @@
 		    $('#loginform').before( 'Velkommen ' + auth.getUserName() );
 		    $('#loginbutton').remove();
 		} else {
-			$('#searchresults').find('thead tr').children().slice(3).remove();
 			$('#loginform').before('Du må logge inn.');
 		    $('#logoutbutton').remove();
 		}
