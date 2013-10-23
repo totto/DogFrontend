@@ -8,6 +8,5 @@ $.extend( $.fn.pickadate.defaults, {
     today: 'I dag',
     clear: 'Nullstill',
     firstDay: 1,
-    format: 'yyyy-mm-dd',
-    formatSubmit: 'yyyy-mm-ddT00:00:00Z'
+    format: 'yyyy-mm-dd'
 });
