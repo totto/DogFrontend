@@ -122,6 +122,19 @@
 					</dd>
 				{{?}}
 
+				{{?it.details.showResults}}
+					<dt>Resultater fra utstillinger</dt>
+					<dd>
+						<dl>
+							{{~it.details.showResults:show:j}}
+								<dt>{{=show.location}}, {{=show.date}}</dt>
+								<dt>{{=show.organizer}}, {{=show.judge}} ({{=show.showId}})</dt>
+								<dd>{{=show.result}} ({{=show.catalogNumber}})</dd>
+							{{~}}
+						</dl>
+					</dd>
+				{{?}}
+
 				{{?it.details.breeders}}
 					<dt>Oppdretter</dt>
 					{{~it.details.breeders:breeder:i}}
