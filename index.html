@@ -115,7 +115,7 @@
 					<dd>
 						<dl>
 							{{~it.details.offspring:offspring:i}}
-								<dt>{{=offspring.born}} ({{=offspring.count}})</dt>
+								<dt>Født: {{=offspring.born}} ({{=offspring.count}})</dt>
 								{{~offspring.puppies:pup:o}}<dd>{{=pup.name}}</dd>{{~}}
 							{{~}}
 						</dl>
@@ -144,16 +144,6 @@
 
 			</dl>
 		</script> 
-
-		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="js/lib/doT.min.js"></script>
-		<script type="text/javascript" src="js/lib/picker.js"></script>
-		<script type="text/javascript" src="js/lib/picker.date.js"></script>
-		<script type="text/javascript" src="js/lib/legacy.js"></script>
-		<script type="text/javascript" src="js/lib/no_NO.js"></script>
-		<script type="text/javascript" src="js/auth.js"></script>
-		<script type="text/javascript" src="js/dogsearch.js"></script>
-
+		<script data-main="js/main" src="js/lib/require.js"></script>
 	</body>
 </html>

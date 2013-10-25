@@ -1,4 +1,4 @@
-var auth = ( function () {
+define([], function () {
 
     var tokenServiceUrl = '/tokenservice/';
     var appId = 'Styrerommet';
@@ -180,4 +180,4 @@ var auth = ( function () {
         logout: logout
     };
 
-}());
+});
