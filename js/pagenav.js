@@ -38,7 +38,7 @@ define(['jQuery', 'doT', 'config'], function($, doT, conf){
 	}
 
 	function prev() {
-		if( currentPage > 0 ) {
+		if( currentPage > 1 ) {
 			go(--currentPage);
 		}
 	}
@@ -50,9 +50,9 @@ define(['jQuery', 'doT', 'config'], function($, doT, conf){
 	}
 		
 	// Page navigation listeners
-	$('#pagenavigation').on('click','#nextpagebtn', function() { pagenav.next() } );
-	$('#pagenavigation').on('click','#prevpagebtn', function() { pagenav.prev() } );
-	$('#pagenavigation').on('change','#selectpage', function() { pagenav.go(this.value) } );
+	$('#pagenavigation').on('click','#nextpagebtn', function() { next() } );
+	$('#pagenavigation').on('click','#prevpagebtn', function() { prev() } );
+	$('#pagenavigation').on('change','#selectpage', function() { go(this.value) } );
 
 	return {
 		generate: generate,

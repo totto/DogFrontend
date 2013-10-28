@@ -36,9 +36,13 @@ $headerHeight: 50px;
 	}
 }
 
-@mixin hoverpop {
+@mixin pop {
+	box-shadow: 0 1px 3px #555;
 	&:hover {
 		box-shadow: 0 1px 3px #888;
+	}
+	&:active {
+		box-shadow: 0 0px 1px #888;
 	}
 }
 
@@ -131,7 +135,7 @@ h1 {
 
 button, input[type=submit] {
 	@include hoverbg($activeColor);
-	@include hoverpop;
+	@include pop;
 	background-color: $inputColor;
 	border: none;
 	font: inherit;
@@ -277,6 +281,14 @@ td {
 .inactive {
 	font-style: italic;
 	opacity: 0.7;
+}
+.bar {
+	background: #eee;
+	span {
+		background: #ddd; 
+		display: block; 
+		padding-left:.2em;
+	}
 }
 
 label, button {
