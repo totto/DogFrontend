@@ -101,7 +101,9 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 			for(var i=0;i<dogslength;i++) {
 				try {
 					var dog = dogs[i];
-					dog.born = dog.born.substring(0,10);
+					if(dog.born) {
+						dog.born = dog.born.substring(0,10);	
+					}
 					dog.details = jQuery.parseJSON( dog.json_detailed );
 					dog.counter = i;
 					html += dogRenderer(dog);
