@@ -19,6 +19,9 @@ define([], function() {
                 rows:50,
                 start:0
             },
+            beforeSend: function(jqXHR, settings) {
+                jqXHR.url = settings.url;
+            },
             traditional: true
         }
     }

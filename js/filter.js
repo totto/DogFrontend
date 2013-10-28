@@ -2,13 +2,10 @@
 define(['require', 'filter/modules', 'config', 'pagenav'], function(require, modules, conf, pagenav){
     
     var me = {};
-    var ml = modules.list.length;
-    
-    // Document listeners
-    $(document).on('filterUpdate', function() { updateSolrParams() });
 
     function runModuleMethod(method) {
         var result = [];
+        var ml = modules.list.length;
         for(var i = 0; i < ml; i++) {
             result = result.concat( modules.list[i][method]() );
         }
@@ -42,6 +39,22 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
     me.getUrlParams = function(){
         return runModuleMethod('getUrlParams');
     }
+
+    clearFilters = function() {
+        $('#searchfacets').find('input:checked').each( function( ) {
+            $(this).click();
+        });
+        $('#searchfacets').find('.picker__input').each( function( ) {
+            $(this).pickadate('picker').clear();
+        });
+    }
+    
+    // Document listeners
+    $(document).on('filterUpdate', function() { updateSolrParams() });
+    
+    // Clear all
+    $('#searchsummary').on('click', '.clearBtn', function() { clearFilters() } );
+    $('#searchresults').on('click', '.clearBtn', function() { clearFilters() } );
 
     return me;
 });

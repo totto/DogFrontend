@@ -48,6 +48,11 @@ define(['jQuery', 'doT', 'config'], function($, doT, conf){
 			go(++currentPage);
 		}
 	}
+		
+	// Page navigation listeners
+	$('#pagenavigation').on('click','#nextpagebtn', function() { pagenav.next() } );
+	$('#pagenavigation').on('click','#prevpagebtn', function() { pagenav.prev() } );
+	$('#pagenavigation').on('change','#selectpage', function() { pagenav.go(this.value) } );
 
 	return {
 		generate: generate,

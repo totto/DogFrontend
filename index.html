@@ -23,7 +23,7 @@
 			<input type="checkbox" id="menutrigger" style="display:none">
 			<label for="menutrigger"><span>Menu</span></label>
 			<ul>
-				<li><button id="downloadCsvBtn">Last ned CSV</button></li>
+				<li><button id="downloadJsonBtn">Last ned JSON</button></li>
 				<li><a href="graph.html">RAS Dashboard</a></li>
 			</ul>
 		</div>
@@ -53,9 +53,9 @@
 						<th class="sortable" id="breed">Rase</th>
 						<th class="sortable" id="gender">Kjønn</th>
 						<th class="sortable" id="born">Født</th>
-						<th class="sortable" id="registrationDate">Registrert</th>
-						<th>Hundeid</th>
+						<th>RegNo</th>
 						<th class="sortable" id="postalCode">Postnr</th>
+						<th>Kvalitet</th>
 					</tr>
 				</thead>
 				<tbody></tbody>
@@ -78,9 +78,9 @@
 				<td>{{=it.breed}}</td>
 				<td><span>{{=it.gender}}<span></td>
 				<td><span>{{?it.born}}{{=it.born}}{{??}}-{{?}}<span></td>
-				<td><span>{{?it.registrationDate}}{{=it.registrationDate}}{{??}}-{{?}}<span></td>
 				<td><span>{{~it.ids:id:i}}{{=id}}<br/>{{~}}</span></td>
 				<td><span>{{?it.postalCode}}{{=it.postalCode}}{{??}}-{{?}}</span></td>
+				<td><span>{{=it.details.quality}}</span></td>
 			</tr>
 		</script> 
 		<script id="detailtemplate" type="text/x-dot-template">
@@ -91,14 +91,19 @@
 				<dd>{{=it.breed}}</dd>
 				<dt>Født</dt>
 				<dd>{{?it.born}}{{=it.born}}{{??}}Mangler fødselsdato{{?}}</dd>
-				<dt>Registrert</dt>
-				<dd>{{?it.registrationDate}}{{=it.registrationDate}}{{??}}Mangler registreringsdato</dd>{{?}}
 				<dt>Kjønn</dt>
 				<dd>{{=it.gender}}</dd>
-				<dt>ID-nummer</dt>
+				<dt>Registreringsnummer</dt>
 				<dd>{{~it.details.ids:id:i}}{{=id.type}}: {{=id.value}}<br/>{{~}}</dd>
 				<dt>Postnummer</dt>
 				<dd>{{=it.postalCode}}</dd>
+
+				{{?it.details.breeders}}
+					<dt>Oppdretter</dt>
+					{{~it.details.breeders:breeder:i}}
+						<dd>{{=breeder.name}}</dd>
+					{{~}}
+				{{?}}
 				
 				{{?it.details.ancestry.father}}
 					<dt>Far</dt>
@@ -125,21 +130,29 @@
 				{{?it.details.showResults}}
 					<dt>Resultater fra utstillinger</dt>
 					<dd>
-						<dl>
-							{{~it.details.showResults:show:j}}
-								<dt>{{=show.location}}, {{=show.date}}</dt>
-								<dt>{{=show.organizer}}, {{=show.judge}} ({{=show.showId}})</dt>
-								<dd>{{=show.result}} ({{=show.catalogNumber}})</dd>
-							{{~}}
-						</dl>
+						<table>
+							<tr>
+								<th>Sted</th>
+								<th>Dato</th>
+								<th>Organisert av</th>
+								<th>Dommer</th>
+								<th>Showid</th>
+								<th>Resultat</th>
+								<th>Katalognummer</th>
+							</tr>
+						{{~it.details.showResults:show:j}}
+							<tr>
+								<td>{{=show.location}}</td>
+								<td>{{=show.date}}</td>
+								<td>{{=show.organizer}}</td>
+								<td>{{=show.judge}}</td>
+								<td>{{=show.showId}}</td>
+								<td>{{=show.result}}</td>
+								<td>{{=show.catalogNumber}}</td>
+							</tr>
+						{{~}}
+						</table>
 					</dd>
-				{{?}}
-
-				{{?it.details.breeders}}
-					<dt>Oppdretter</dt>
-					{{~it.details.breeders:breeder:i}}
-						<dd>{{=breeder.name}}</dd>
-					{{~}}
 				{{?}}
 
 			</dl>
@@ -147,3 +160,35 @@
 		<script data-main="js/main" src="js/lib/require.js"></script>
 	</body>
 </html>
+
+<!--
+				{{? it.memberships[0] }}
+				<dt>Aktive medlemsskap</dt>
+					<dd>
+						<table>
+							<tr>
+								<th>Type</th>
+								<th>Klubb</th>
+								<th>Avdeling</th>
+								<th>Bet.status</th>
+								<th>Forfall</th>
+								<th>Bet.dato</th>
+								<th>Innmeldingsdato</th>
+								<th>Medlem til</th>
+							</tr>
+						{{~ it.memberships :ms:i}}
+							<tr{{? ms.expires!="2014-01-01"}} class="inactive"{{?}}>
+								<td>{{=ms.type}}</td>
+								<td>{{=ms.club}}</td>
+								<td>{{? ms.department }}{{=ms.department}}{{?}}</td>
+								<td>{{? ms.paymentStatus }}{{=ms.paymentStatus}}{{?}}</td>
+								<td>{{=ms.paymentDue}}</td>
+								<td>{{=ms.paymentReceived}}</td>
+								<td>{{=ms.enrolled}}</td>
+								<td>{{=ms.expires}}</td>
+							</tr>
+						{{~}}
+						</table>
+					</dd>
+				{{?}}
+				-->

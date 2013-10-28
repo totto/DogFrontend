@@ -1,12 +1,11 @@
 /* Search */
-define(['config', 'filter', 'pagenav'], function(conf, filter, pagenav) {
+define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, doT) {
 
 	var initiated = false,
 	firstrun = true,
 	searchrequest;
-
-    // Document listeners
-    $(document).on('doSearch', function() { run() });
+	var dogTemplate = $('#tabletemplate').text();
+	var dogRenderer = doT.template(dogTemplate);
 
 	function prep(t) {
 		currentPage = 1;
@@ -94,7 +93,6 @@ define(['config', 'filter', 'pagenav'], function(conf, filter, pagenav) {
 		return summary;
 	}
 
-
 	function renderResults(data) {
 		var html = '';
 		if(data.response.numFound > 0){
@@ -103,6 +101,7 @@ define(['config', 'filter', 'pagenav'], function(conf, filter, pagenav) {
 			for(var i=0;i<dogslength;i++) {
 				try {
 					var dog = dogs[i];
+					dog.born = dog.born.substring(0,10);
 					dog.details = jQuery.parseJSON( dog.json_detailed );
 					dog.counter = i;
 					html += dogRenderer(dog);
@@ -116,8 +115,6 @@ define(['config', 'filter', 'pagenav'], function(conf, filter, pagenav) {
 		}
 		$("#searchresults tbody").html(html);
 	}
-
-
 
 	function getUrlVars() {
 		if(location.href.indexOf('?')>-1) {
@@ -175,8 +172,16 @@ define(['config', 'filter', 'pagenav'], function(conf, filter, pagenav) {
 		initiated = true;
 	}
 
-	    // Document listeners
-	    $(document).on('filterUpdate', function() { buildSearchSummary() });
+
+	function downloadJson() {
+		window.open(searchrequest.url);
+	}
+
+	$('#downloadJsonBtn').click( function() { downloadJson() } );
+
+    // Document listeners
+    $(document).on('doSearch', function() { run() });
+    $(document).on('filterUpdate', function() { buildSearchSummary() });
 
 	return {
 		prep: prep,

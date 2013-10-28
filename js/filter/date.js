@@ -1,5 +1,5 @@
 /* Date-facets */
-define(['jQuery','tooltip','dict', 'doT'], function($, tooltip, dict, doT){
+define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date', 'picker_no'], function($, tooltip, dict, doT){
 	
 	var me = {};
 
