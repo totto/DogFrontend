@@ -176,14 +176,17 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 
 
 	function downloadJson() {
-		var jsonConf = conf.solr;
-		jsonConf.data.fl = 'json_detailed';
-		jsonConf.data.rows = 1000000;
-		jsonConf.beforeSend = function(jqXHR, settings) {
+		var tempRows = conf.solr.data.rows;
+		var tempFl = conf.solr.data.fl;
+		conf.solr.data.fl = 'json_detailed';
+		conf.solr.data.rows = 1000000;
+		conf.solr.beforeSend = function(jqXHR, settings) {
             jqXHR.url = settings.url;
         };
-		jsonRequest = $.ajax(jsonConf).done();
+		jsonRequest = $.ajax(conf.solr);
 		window.open(jsonRequest.url);
+		conf.solr.data.fl = tempFl;
+		conf.solr.data.rows = tempRows;
 	}
 
 	$('#downloadJsonBtn').click( function() { downloadJson() } );
