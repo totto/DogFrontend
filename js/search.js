@@ -176,7 +176,14 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 
 
 	function downloadJson() {
-		window.open(searchrequest.url);
+		var jsonConf = conf.solr;
+		jsonConf.data.fl = 'json_detailed';
+		jsonConf.data.rows = 1000000;
+		jsonConf.beforeSend = function(jqXHR, settings) {
+            jqXHR.url = settings.url;
+        };
+		jsonRequest = $.ajax(jsonConf).done();
+		window.open(jsonRequest.url);
 	}
 
 	$('#downloadJsonBtn').click( function() { downloadJson() } );
