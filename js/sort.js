@@ -1,5 +1,5 @@
 /* Sorting */
-define(['jQuery'], function($){
+define(['jQuery', 'config'], function($, conf){
 	var me = {};
 	var sortingParameters = {};
 
