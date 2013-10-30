@@ -64,8 +64,6 @@ h1 {
 }
 
 .searchboxes {
-	width: $navWidth; 
-	overflow: hidden; 
 	input[type=text] {
 		@include box-sizing(border-box);
 		width: 100%;
@@ -80,6 +78,7 @@ h1 {
 	#filter {
 		padding: $paddingSmall;
 		font-size: 120%;
+		max-width: 100%;
 	}
 
 	h2 {
@@ -145,12 +144,7 @@ button, input[type=submit] {
 }
 
 header {
-	position: fixed;
 	font-size: 120%;
-	height: $headerHeight;
-	left:$margin;
-	top:$margin;
-	right:$margin;
 	h1 {
 		padding-left: $padding;
 		display: inline-block;
@@ -195,12 +189,38 @@ header {
 	}
 }
 
+
+@media screen and (min-width: 800px) {
+	header {
+		position: fixed;
+		height: $headerHeight;
+		left:$margin;
+		top:$margin;
+		right:$margin;
+	}
+
+	#searchresults {
+		position: fixed;
+		left: $navWidth+$margin+$padding;
+		right:$margin;
+		top: $headerHeight+$margin+$padding;
+		bottom:$margin;
+		overflow-x: auto;
+	}
+
+	.searchboxes {
+		width: $navWidth; 
+		overflow: hidden; 
+	}
+	#searchoptions {
+		position: fixed;
+		left:$margin;
+		top: $headerHeight+$margin+$padding;
+		bottom:$margin;
+		overflow: auto;
+	}
+}
 #searchoptions {
-	position: fixed;
-	left:$margin;
-	top: $headerHeight+$margin+$padding;
-	bottom:$margin;
-	overflow: auto;
 	section {
 		@include item;
 	}
@@ -225,12 +245,8 @@ dd {
 
 #searchresults {
 	@include item;
-	position: fixed;
-	left: $navWidth+$margin+$padding;
-	right:$margin;
-	top: $headerHeight+$margin+$padding;
-	bottom:$margin;
-	overflow-x: auto;
+	max-width: 100%;
+	overflow: auto;
 }
 
 
