@@ -189,37 +189,6 @@ header {
 	}
 }
 
-
-@media screen and (min-width: 800px) {
-	header {
-		position: fixed;
-		height: $headerHeight;
-		left:$margin;
-		top:$margin;
-		right:$margin;
-	}
-
-	#searchresults {
-		position: fixed;
-		left: $navWidth+$margin+$padding;
-		right:$margin;
-		top: $headerHeight+$margin+$padding;
-		bottom:$margin;
-		overflow-x: auto;
-	}
-
-	.searchboxes {
-		width: $navWidth; 
-		overflow: hidden; 
-	}
-	#searchoptions {
-		position: fixed;
-		left:$margin;
-		top: $headerHeight+$margin+$padding;
-		bottom:$margin;
-		overflow: auto;
-	}
-}
 #searchoptions {
 	section {
 		@include item;
@@ -325,10 +294,10 @@ label, button {
 
 #detailcontent {
 	background-color: #fff;
-	position: absolute;
+	position: fixed;
 	padding: $padding;
 	top: $margin*2;
-	left: $navWidth+$margin*2;
+	left: $margin*2;
 	right: $margin*2;
 	bottom: $margin*2;
 	overflow: auto;
@@ -357,7 +326,7 @@ label, button {
 }
 
 #detailmask {
-	position: absolute;
+	position: fixed;
 	top:0;
 	left:0;
 	right:0;
@@ -546,21 +515,36 @@ label, button {
 		border-radius: $paddingSmall;
 	}
 
-@media only screen and (max-device-width: 600px) {
-
-	#searchoptions {
-		position: relative;
-		left:0;
-		right:0;
-		top:0;
-		max-height: $navWidth;
+@media screen and (min-width: 800px) {
+	header {
+		position: fixed;
+		height: $headerHeight;
+		left:$margin;
+		top:$margin;
+		right:$margin;
 	}
 
 	#searchresults {
-		position: relative;
+		position: fixed;
 		left: $navWidth+$margin+$padding;
-		right:0;
-		left:0;
+		right:$margin;
+		top: $headerHeight+$margin+$padding;
+		bottom:$margin;
+		overflow-x: auto;
 	}
 
+	.searchboxes {
+		width: $navWidth; 
+		overflow: hidden; 
+	}
+	#searchoptions {
+		position: fixed;
+		left:$margin;
+		top: $headerHeight+$margin+$padding;
+		bottom:$margin;
+		overflow: auto;
+	}
+	#detailcontent {
+		left: $navWidth+$margin*2;
+	}
 }
