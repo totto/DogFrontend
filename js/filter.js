@@ -3,11 +3,13 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
     
     var me = {};
 
-    function runModuleMethod(method) {
+    function runModuleMethod(method, params) {
         var result = [];
         var ml = modules.list.length;
         for(var i = 0; i < ml; i++) {
-            result = result.concat( modules.list[i][method]() );
+            if(typeof modules.list[i][method] !== 'undefined'){
+                result = result.concat( modules.list[i][method](params) );
+            }
         }
         return result;
     }
@@ -18,8 +20,8 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
         pagenav.go(1);
     }
 
-    me.getHtml = function(){
-        return runModuleMethod('getHtml').join('');
+    getHtml = function(facets){
+        return runModuleMethod('getHtml', facets).join('');
     }
 
     // @method showFacets 
@@ -28,16 +30,18 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
     // - Requires getLabel and tooltip.get + other control-generators
     // @param {Object} facets - facetdata from solr-search
     me.show = function(facets){
-        var facethtml = "";
-        facethtml+=modules.list[1].getHtml(facets);
-        facethtml += modules.list[0].getHtml();
+        var facethtml = getHtml(facets);
         // Insert facets into div#searchfacets 
         $("#searchfacets").html( facethtml );
-        modules.list[0].bindInput('born');
+        $(document).trigger('filterAppended');
     }
 
     me.getUrlParams = function(){
         return runModuleMethod('getUrlParams');
+    }
+
+    function bindInputs() {
+        runModuleMethod('bindInput',modules.date)
     }
 
     clearFilters = function() {
@@ -51,6 +55,7 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
     
     // Document listeners
     $(document).on('filterUpdate', function() { updateSolrParams() });
+    $(document).on('filterAppended', function() { bindInputs() });
     
     // Clear all
     $('#searchsummary').on('click', '.clearBtn', function() { clearFilters() } );

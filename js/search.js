@@ -4,8 +4,8 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 	var initiated = false,
 	firstrun = true,
 	searchrequest;
-	var dogTemplate = $('#tabletemplate').text();
-	var dogRenderer = doT.template(dogTemplate);
+	var tableTemplate = $('#tabletemplate').text();
+	var tableRenderer = doT.template(tableTemplate);
 
 	function prep(t) {
 		currentPage = 1;
@@ -96,24 +96,23 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 	function renderResults(data) {
 		var html = '';
 		if(data.response.numFound > 0){
-			var dogs = data.response.docs;
-			var dogslength = dogs.length;
-			for(var i=0;i<dogslength;i++) {
+			var docs = data.response.docs;
+			var docslength = docs.length;
+			for(var i=0;i<docslength;i++) {
 				try {
-					var dog = dogs[i];
-					if(dog.born) {
-						dog.born = dog.born.substring(0,10);	
+					var doc = docs[i];
+					if(doc.born) {
+						doc.born = doc.born.substring(0,10);	
 					}
-					dog.details = jQuery.parseJSON( dog.json_detailed );
-					dog.counter = i;
-					html += dogRenderer(dog);
-					// console.log(member);
+					doc.details = jQuery.parseJSON( doc.json_detailed );
+					doc.counter = i;
+					html += tableRenderer(doc);
 				} catch(err) {
 
 				}
 			}
 		} else {
-			html = "Ingen hunder funnet" + getSearchSummary();
+			html = "Ingen funnet" + getSearchSummary();
 		}
 		$("#searchresults tbody").html(html);
 	}

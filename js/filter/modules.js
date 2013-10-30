@@ -1,8 +1,8 @@
 define(function(require){
 	// List the required modules here.
 	var list = [
-		require('filter/date'),
-		require('filter/facet')
+		require('filter/facet'),
+		require('filter/date')
 	];
 
 	var modules = {

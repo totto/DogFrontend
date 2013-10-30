@@ -3,30 +3,35 @@ define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date', 'picker_no'],
 	
 	var me = {};
 
-	var dateInputTemplate = '<span class="datelabel">{{=it.value}}</span><input type="text" data-type="{{=it.value}}" id="{{=it.name}}{{=it.value}}" placeholder="Velg dato"/>';
+	var dateInputTemplate = '<span class="datelabel">{{=it.value}}</span><input type="text" data-type="{{=it.value}}" data-facetname="{{=it.name}}" id="{{=it.name}}{{=it.value}}" placeholder="Velg dato"/>';
 	var dateInputRenderer = doT.template(dateInputTemplate);
 	// dateFacets format: { facetname: [fromDate, toDate] }
 	var dateFacets = {};
 
 	// @method bindInput - Binds pickadate.js-datepicker to the inputfields. Called after insertion of inputfields from @method getDateFacetInput
 	// @param {String} facetname - The name of the facet, e.g. registrationDate
-	me.bindInput = function(facetname) {
-		var opt = {
-			selectYears: 30,
-			selectMonths: true,
-			max: new Date(),
-			onSet: function(event) {
-				var element = $(this.$node[0]);
-				var thistype = element.data('type');
-				setFacet(facetname, thistype, this.get());
-				if ( thistype == "Fra") {
-					var facetvalue = "Til";
-					limitDateFacetInput(facetname, thistype, facetvalue);
-				}
-		    }
+	me.bindInput = function(facetnames) {
+		for(var i = 0; i<facetnames.length; i++){
+			var opt = {
+				selectYears: 30,
+				selectMonths: true,
+				max: new Date(),
+				onSet: function(event) {
+					var element = $(this.$node[0]);
+					var thistype = element.data('type');
+					var thisfacetname = element.data('facetname');
+					setFacet(thisfacetname, thistype, this.get());
+					if ( thistype == "Fra") {
+						var facetvalue = "Til";
+						console.log(thisfacetname);
+						limitDateFacetInput(thisfacetname, thistype, facetvalue);
+					}
+			    }
+			}
+			$('#'+facetnames[i]+'Fra').pickadate(opt);
+			$('#'+facetnames[i]+'Til').pickadate(opt);
+
 		}
-		$('#'+facetname+'Fra').pickadate(opt);
-		$('#'+facetname+'Til').pickadate(opt);
 	}
 
 	// @method setDateFacet
