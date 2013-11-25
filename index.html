@@ -98,6 +98,33 @@
 				<dt>Postnummer</dt>
 				<dd>{{=it.postalCode}}</dd>
 
+				{{?it.details.health}}
+					<dt>Helse</dt>
+					{{ for( key in it.details.health) { }}
+						<dd>
+							<dl>
+								<dt>{{=key}}</dt>
+								{{~it.details.health[key]:health:i}}
+								<dd>
+									<table>
+										<tr>
+										{{ for( subkey in health ) { }} 
+											<th>{{=subkey}}</th>
+										{{ } }}
+										</tr>
+										<tr>
+										{{ for( subkey in health ) { }} 
+											<td>{{=health[subkey]}}</td>
+										{{ } }}
+										</tr>
+									</table>
+								</dd>
+								{{~}}
+							</dl>
+						</dd>
+					{{ } }}
+				{{?}}
+
 				{{?it.details.breeders}}
 					<dt>Oppdretter</dt>
 					{{~it.details.breeders:breeder:i}}
