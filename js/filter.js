@@ -17,7 +17,7 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
     function updateSolrParams() {
         var params = runModuleMethod('getSolrParams');
         conf.solr.data.fq = params;
-        conf.additionalParams = runModuleMethod('getAdditionalParams');
+        conf.additionalParams = runModuleMethod('getAdditionalParams').join(' ');
         pagenav.go(1);
     }
 
@@ -45,13 +45,9 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
         runModuleMethod('bindInput', modules)
     }
 
-    clearFilters = function() {
-        $('#searchfacets').find('input:checked').each( function( ) {
-            $(this).click();
-        });
-        $('#searchfacets').find('.picker__input').each( function( ) {
-            $(this).pickadate('picker').clear();
-        });
+    function clearFilters() {
+        $sf = $('#searchfacets');
+        runModuleMethod('clearFilter',$sf);
     }
     
     // Document listeners

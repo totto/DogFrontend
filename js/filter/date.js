@@ -153,6 +153,12 @@ define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date'], function($, 
 		return urlData;
 	}
 
+	me.clearFilter = function($filtercontainer) {
+        $filtercontainer.find('.picker__input').each( function( ) {
+            $(this).pickadate('picker').clear();
+        });
+	}
+	
 	return me;
 
 })

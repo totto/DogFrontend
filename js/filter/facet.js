@@ -99,6 +99,12 @@ define(['jQuery', 'dict', 'tooltip', 'doT'], function($, dict, tooltip, doT){
 		}
 	}
 
+	me.clearFilter = function($filtercontainer) {
+        $filtercontainer.find('input:checked').each( function( ) {
+            $(this).click();
+        });
+	}
+
 
 	// Search listeners
 	$('#searchfacets').on('keyup','.facetfilter', function() { filterFacetList(this) } );

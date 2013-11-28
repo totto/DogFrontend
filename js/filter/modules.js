@@ -3,7 +3,8 @@ define(function(require){
 	var list = [
 		require('filter/facet'),
 		require('filter/date'),
-		require('filter/fieldSearch')
+		require('filter/fieldSearch'),
+		require('filter/sourcePicker')
 	];
 
 	var modules = {

@@ -1,5 +1,5 @@
 /* Field Search */
-define(['jQuery','tooltip','dict'], function($, tooltip, dict, doT){
+define(['jQuery','tooltip','dict'], function($, tooltip, dict){
 	
 	var me = {};
 
@@ -17,7 +17,7 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict, doT){
 		var params = [];
 		for( key in queries ) {
 			if(queries[key] != '') {
-				params.push( 'json_detailed:"' + key + ' ' + queries[key] + '"~10' );
+				params.push( 'json_detailed:"' + key + ' ' + queries[key] + '"~25' );
 			}
 		}
 		return params.join(' ');
@@ -54,6 +54,12 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict, doT){
 			urlData.push('fieldSearch='+key+'_'+queries[key]);
 		}
 		return urlData;
+	}
+
+	me.clearFilter = function($filtercontainer) {
+		$filtercontainer.find('.fieldsearch').each( function( ) {
+            $(this).val('').trigger('change');
+        });
 	}
 
 	return me;

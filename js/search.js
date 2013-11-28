@@ -171,11 +171,13 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 						break;
 					case 'fieldSearch':
 						var l = initData[key].length;
-						console.log('fieldsearch',key);
 						for(k=l-1; k>=0; k--) {
 							var fieldSearch = initData[key][k].split('_');
 							$('#'+fieldSearch[0]+'_q').val(fieldSearch[1]).trigger('change');
 						}
+						break;
+					case 'source':
+						$('#sourcepicker').val( initData[key][0] ).trigger('change');
 						break;
 					default:
 					for(i=0, l = initData[key].length; i<l; i++) {
