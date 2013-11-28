@@ -34,15 +34,15 @@
 			
 			<div id="searchsummary"></div>
 
-			<footer>
+			<footer style="display:none">
 				<h2>Profil</h2>
 				<form method="post" action="/sso/login?redirectURI=/MemberFrontend/dogs.html" id="loginform">
 					<input type="submit" value="Log in" id="loginbutton" class="butt">
 					<a href="/sso/logout?redirectURI=/MemberFrontend/dogs.html" onClick="auth.logout();" id="logoutbutton">Log out</a>
 				</form>
 				<br/>
-				<img src="img/NKK-logo.png" alt="NKK Logo">
 			</footer>
+				<img src="img/NKK-logo.png" alt="NKK Logo">
 		</div>
 
 		<div id="searchresults">
@@ -80,7 +80,7 @@
 				<td><span>{{?it.born}}{{=it.born}}{{??}}-{{?}}<span></td>
 				<td><span>{{~it.details.ids:id:i}}{{=id.type}}: {{=id.value}}<br/>{{~}}</span></td>
 				<td><span>{{?it.postalCode}}{{=it.postalCode}}{{??}}-{{?}}</span></td>
-				<td><div class="bar"><span style="width: {{=it.details.quality}}%;">{{=it.details.quality}}</span></div></td>
+				<td>{{?it.details.quality}}<div class="bar"><span style="width: {{=it.details.quality}}%;">{{=it.details.quality}}</span></div>{{?}}</td>
 			</tr>
 		</script> 
 		<script id="detailtemplate" type="text/x-dot-template">

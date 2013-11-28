@@ -4,6 +4,7 @@ define([], function() {
     var me = {
         bufferedData: {},
         filterTxt: '',
+        additionalParams: '',
         solr: {
             type:"get",
             url: solrurl,

@@ -14,7 +14,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 		if ( conf.filterTxt.replace(/\s+/g, '')==='') {
 			conf.filterTxt = '*';
 		}
-		conf.solr.data.q = "{!q.op=AND}" + conf.filterTxt;
+		conf.solr.data.q = "{!q.op=AND}" + conf.filterTxt + ' ' + conf.additionalParams;
 		run();
 	}
 
@@ -68,6 +68,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 	}
 
 
+	// Most of this should be moved to the individual filter modules
 	function getSearchSummary() {
 		var summary = "<dl><dt>Søketekst</dt>";
 		var filtertext = document.getElementById('filter').value || "(ingen)";
@@ -82,6 +83,12 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 				var $e = $(this);
 				if($e.val() != '') {
 					content +=  '<dd>'+$e.data('type') + ': ' + $e.val()+'</dd>';
+				}
+			});
+			$(this).children('.fieldsearch').each( function() {
+				var $e = $(this);
+				if($e.val() != '') {
+					content +=  '<dd>'+$e.val()+'</dd>';
 				}
 			});
 			if(content!='') {
@@ -108,7 +115,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 					doc.counter = i;
 					html += tableRenderer(doc);
 				} catch(err) {
-
+					console.log(err);
 				}
 			}
 		} else {
@@ -134,6 +141,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 		return false;
 	}
 
+	// Most of this should be moved to the individual filter modules
 	function applyInitData() {
 		var	initData = getUrlVars();
 		if( initData ) {
@@ -161,6 +169,14 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 							$('#'+fqrange[0]).pickadate('picker').set( 'select', Date.parse(fqrange[1]) );
 						}
 						break;
+					case 'fieldSearch':
+						var l = initData[key].length;
+						console.log('fieldsearch',key);
+						for(k=l-1; k>=0; k--) {
+							var fieldSearch = initData[key][k].split('_');
+							$('#'+fieldSearch[0]+'_q').val(fieldSearch[1]).trigger('change');
+						}
+						break;
 					default:
 					for(i=0, l = initData[key].length; i<l; i++) {
 						if( typeof initData[key][i] !== 'undefined' ) {
@@ -171,6 +187,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 			}
 		}
 		initiated = true;
+		prep();
 	}
 
 
@@ -191,7 +208,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 	$('#downloadJsonBtn').click( function() { downloadJson() } );
 
     // Document listeners
-    $(document).on('doSearch', function() { run() });
+    $(document).on('doSearch', function() { prep() });
     $(document).on('filterUpdate', function() { buildSearchSummary() });
 
 	return {

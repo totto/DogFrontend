@@ -1,6 +1,17 @@
 /* Date-facets */
-define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date', 'picker_no'], function($, tooltip, dict, doT){
+define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date'], function($, tooltip, dict, doT){
 	
+	$.extend( $.fn.pickadate.defaults, {
+	    monthsFull: [ 'januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember' ],
+	    monthsShort: [ 'jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des' ],
+	    weekdaysFull: [ 'søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag' ],
+	    weekdaysShort: [ 'søn','man','tir', 'ons', 'tor', 'fre', 'lør' ],
+	    today: 'I dag',
+	    clear: 'Nullstill',
+	    firstDay: 1,
+	    format: 'yyyy-mm-dd'
+	});
+
 	var me = {};
 
 	var dateInputTemplate = '<span class="datelabel">{{=it.value}}</span><input type="text" data-type="{{=it.value}}" data-facetname="{{=it.name}}" id="{{=it.name}}{{=it.value}}" placeholder="Velg dato"/>';
@@ -10,7 +21,8 @@ define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date', 'picker_no'],
 
 	// @method bindInput - Binds pickadate.js-datepicker to the inputfields. Called after insertion of inputfields from @method getDateFacetInput
 	// @param {String} facetname - The name of the facet, e.g. registrationDate
-	me.bindInput = function(facetnames) {
+	me.bindInput = function(modules) {
+		var facetnames=modules.date;
 		for(var i = 0; i<facetnames.length; i++){
 			var opt = {
 				selectYears: 30,
@@ -23,7 +35,6 @@ define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date', 'picker_no'],
 					setFacet(thisfacetname, thistype, this.get());
 					if ( thistype == "Fra") {
 						var facetvalue = "Til";
-						console.log(thisfacetname);
 						limitDateFacetInput(thisfacetname, thistype, facetvalue);
 					}
 			    }
@@ -67,11 +78,6 @@ define(['jQuery','tooltip','dict', 'doT', 'picker', 'picker_date', 'picker_no'],
 			}
 		}
 		return fq;
-	}
-
-	// @method getUrlDateFacet
-	// @return {Array} - Returns array for insertion to solr-fq, on the form "facet1:[from TO to]"
-	function getUrlDateFacets() {
 	}
 
 	function limitDateFacetInput(facetname, thistype, facetvalue) {

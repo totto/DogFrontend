@@ -17,11 +17,12 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
     function updateSolrParams() {
         var params = runModuleMethod('getSolrParams');
         conf.solr.data.fq = params;
+        conf.additionalParams = runModuleMethod('getAdditionalParams');
         pagenav.go(1);
     }
 
     getHtml = function(facets){
-        return runModuleMethod('getHtml', facets).join('');
+        return runModuleMethod('getHtml', {facets: facets, modules: modules} ).join('');
     }
 
     // @method showFacets 
@@ -41,7 +42,7 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
     }
 
     function bindInputs() {
-        runModuleMethod('bindInput',modules.date)
+        runModuleMethod('bindInput', modules)
     }
 
     clearFilters = function() {

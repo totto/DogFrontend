@@ -8,7 +8,8 @@ define(['jQuery', 'dict', 'tooltip', 'doT'], function($, dict, tooltip, doT){
 
 	var me = {};
 	
-	me.getHtml = function(facets) {
+	me.getHtml = function(kwargs) {
+		var facets = kwargs.facets;
 		var facethtml = "";
         for( var facet in facets ){
             var content = "";
