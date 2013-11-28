@@ -1,10 +1,10 @@
 define(function(require){
 	// List the required modules here.
 	var list = [
+		require('filter/sourcePicker'),
 		require('filter/facet'),
 		require('filter/date'),
-		require('filter/fieldSearch'),
-		require('filter/sourcePicker')
+		require('filter/fieldSearch')
 	];
 
 	var modules = {

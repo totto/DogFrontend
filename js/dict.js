@@ -6,7 +6,10 @@ define([], function () {
 		'breed': 'Hunderaser',
 		'gender': 'Kjønn',
 		'registrationdate': 'Registrert',
-		'born': 'Født'
+		'born': 'Født',
+		'source': 'Kilde',
+		'showresults': 'Utstillingsresultater',
+		'health': 'Helse'
 	}
 	return {
 		get: function(word) {

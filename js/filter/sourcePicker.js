@@ -7,8 +7,9 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict){
 	var source = 'ALL';
 	var source_param = {
 		ALL: '',
-		NO: '-postalCode:Sweden',
-		SE: 'postalCode:Sweden'
+		NO: '-postalCode:Sweden -postalCode:Finland',
+		SE: 'postalCode:Sweden',
+		FI: 'postalCode:Finland'
 	}
 
 	function setSource(s) {
@@ -31,8 +32,9 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict){
 		var html = '<div><h2 '+tooltip.get(field)+'>'+dict.get(field)+'</h2>'
 		+'<select id="sourcepicker">'
 		+'<option value="ALL">Alle</option>'
-		+'<option value="NO">Norske hunder</option>'
-		+'<option value="SE">Svenske hunder</option>'
+		+'<option value="NO">NKK</option>'
+		+'<option value="SE">SKK</option>'
+		+'<option value="FI">FKK</option>'
 		+'</select>'
 		+'</div>';
 		return [html];
