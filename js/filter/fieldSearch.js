@@ -51,7 +51,9 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict){
 	me.getUrlParams = function() {
 		var urlData = [];
 		for( key in queries ) {
-			urlData.push('fieldSearch='+key+'_'+queries[key]);
+			if(queries[key] != ''){
+				urlData.push('fieldSearch='+key+'_'+queries[key]);
+			}
 		}
 		return urlData;
 	}

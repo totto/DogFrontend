@@ -76,6 +76,9 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 		$('#searchfacets').children().each( function( ) {
 			var heading = '<dt>'+$(this).children('h2').first().html()+'</dt>';
 			var content = "";
+			$(this).find('#sourcepicker option:selected').each( function() {
+				content +=  '<dd>'+$(this).text()+'</dd>';
+			});
 			$(this).find('input:checked').each( function() {
 				content +=  '<dd>'+$(this).next().html()+'</dd>';
 			});

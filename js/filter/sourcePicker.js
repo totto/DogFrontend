@@ -52,6 +52,13 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict){
 		return urlData;
 	}
 
+	me.clearFilter = function($filtercontainer) {
+		$filtercontainer.find('#sourcepicker').each( function( ) {
+            $(this).val('ALL').trigger('change');
+        });
+	}
+
+
 	return me;
 
 })
