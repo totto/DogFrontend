@@ -1,4 +1,4 @@
-define(['jQuery', 'auth', 'search', 'sort', 'detail'], function ($, auth, search, sort, detail) {
+define(['jQuery', 'auth', 'search', 'sort', 'detail', 'csv'], function ($, auth, search, sort, detail) {
 
 	function init() {
 

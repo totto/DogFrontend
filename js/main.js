@@ -7,13 +7,16 @@ require.config({
         //'jQueryUI': 'jquery-ui-1.10.3.custom.min',
         'doT': 'lib/doT.min',
         'picker': 'lib/picker',
-        'picker_date': 'lib/picker.date'
+        'picker_date': 'lib/picker.date',
+        'downloadify': 'lib/downloadify.min',
+        'swfobject': 'lib/swfobject'
     },
     shim: {
         'jQuery':       { exports: 'jQuery' },
         'jQueryUI':     { deps: ['jQuery'] },
         'picker':       { deps: ['jQuery'] },
-        'picker_date':  { deps: ['picker'] }
+        'picker_date':  { deps: ['picker'] },
+        'downloadify':  { deps: ['jQuery','swfobject'] }
     }
 });
 
