@@ -1,0 +1,5 @@
+IE11 BUGS
+- URL blir rar (undefined)
+- Fryser telleren for antall funnede hunder
+--- Fryser på søk nummer to
+- Take away profile
