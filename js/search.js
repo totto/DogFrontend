@@ -1,5 +1,5 @@
 /* Search */
-define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, doT) {
+define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, filter, pagenav, doT, facet) {
 
 	var initiated = false,
 	firstrun = true,
@@ -183,6 +183,12 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 					case 'source':
 						$('#sourcepicker').val( initData[key][0] ).trigger('change');
 						break;
+					case 'breed':
+						for(i=0, l = initData[key].length; i<l; i++) {
+							if( typeof initData[key][i] !== 'undefined' ) {
+								facet.addFacetBtn(key, initData[key][i], 'breed' );
+							}
+						}
 					default:
 					for(i=0, l = initData[key].length; i<l; i++) {
 						if( typeof initData[key][i] !== 'undefined' ) {

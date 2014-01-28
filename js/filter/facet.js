@@ -52,13 +52,17 @@ define(['jQuery', 'dict', 'tooltip', 'doT', 'jQueryUI'], function($, dict, toolt
 			$('#'+acfacet+'_ac').autocomplete({
 				source: autocompletefacets[acfacet],
 				select: function( event, ui ) {
-					$('#'+this.name+'_container').append('<button class="removeFacetBtn" name="'+acfacet+'">'+ui.item.value+'</button>');
-					addFacet(ui.item.value, acfacet);
+					me.addFacetBtn(acfacet, ui.item.value, this.name);
 					this.value="";
 					return false;
 				}
 			});
 		}
+	}
+
+	me.addFacetBtn = function(facet, value, container) {
+		$('#'+container+'_container').append('<button class="removeFacetBtn" name="'+facet+'">'+value+'</button>');
+		addFacet(value, facet);
 	}
 
 	me.getSolrParams = function() {
@@ -74,12 +78,13 @@ define(['jQuery', 'dict', 'tooltip', 'doT', 'jQueryUI'], function($, dict, toolt
 	}
 	me.getUrlParams = function() {
 		var urlData = [];
-		$('#searchfacets').find('ul').children().each( function( ) {
-			var filterCheckbox = $(this).children().first();
-			if( filterCheckbox.prop('checked') ) {
-				urlData.push( filterCheckbox.prop('id').split('_').join("=") );
+		for( var f in facets ) {
+			console.log(facets[f]);
+			console.log(facets[f].length);
+			for( var i = facets[f].length-1; i>=0; i--) {
+				urlData.push( [f,facets[f][i]].join('=') );
 			}
-		});
+		}
 		return urlData;
 	}
 
