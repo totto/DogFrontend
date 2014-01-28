@@ -104,6 +104,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 	}
 
 	function renderResults(data) {
+		console.log('Rendering results from search...');
 		var html = '';
 		if(data.response.numFound > 0){
 			var docs = data.response.docs;
@@ -213,7 +214,7 @@ define(['config', 'filter', 'pagenav', 'doT'], function(conf, filter, pagenav, d
 	$('#downloadJsonBtn').click( function() { downloadJson() } );
 
     // Document listeners
-    $(document).on('doSearch', function() { prep() });
+    $(document).on('doSearch', function() { run() });
     $(document).on('filterUpdate', function() { buildSearchSummary() });
 
 	return {

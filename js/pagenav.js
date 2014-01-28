@@ -4,11 +4,12 @@ define(['jQuery', 'doT', 'config'], function($, doT, conf){
 	var numberOfPages = 1;
 	var currentPage = 1;
 	var navTemplate =
-		'<p>{{=it.first}} - {{=it.last}} av {{=it.numfound}}</p>'+
+		'<p>Hund {{=it.first}} - {{=it.last}} av {{=it.numfound}}</p>'+
 		'<button id="prevpagebtn">&lt;</button>'+
-		'<select id="selectpage">'+
-		'{{ for(var i=1;i<=it.numberOfPages;i++) { }}<option value="{{=i}}">Side {{=i}}</option>{{ } }}'+
-		'</select>'+
+		//'<select id="selectpage">'+
+		//'{{ for(var i=1;i<=it.numberOfPages;i++) { }}<option value="{{=i}}">Side {{=i}}</option>{{ } }}'+
+		//'</select>'+
+		'Side <input type="number" id="pageinput" size="6" value="{{=it.currentPage}}"> av {{=it.numberOfPages}} <button id="gotopagebtn">Gå til</button>'+
 		'<button id="nextpagebtn">&gt;</button>';
 	var navRenderer = doT.template(navTemplate);
 
@@ -24,11 +25,11 @@ define(['jQuery', 'doT', 'config'], function($, doT, conf){
 			first: currentFirst,
 			last: currentLast,
 			numfound: numfound,
-			numberOfPages: numberOfPages
+			numberOfPages: numberOfPages,
+			currentPage: currentPage
 		};
 		var html = navRenderer(navdata);
 		$('#pagenavigation').html(html);
-		$("#selectpage").val(currentPage);
 	}
 
 	function go(pageNum) {
@@ -52,7 +53,7 @@ define(['jQuery', 'doT', 'config'], function($, doT, conf){
 	// Page navigation listeners
 	$('#pagenavigation').on('click','#nextpagebtn', function() { next() } );
 	$('#pagenavigation').on('click','#prevpagebtn', function() { prev() } );
-	$('#pagenavigation').on('change','#selectpage', function() { go(this.value) } );
+	$('#pagenavigation').on('click','#gotopagebtn', function() { go(document.getElementById('pageinput').value) } );
 
 	return {
 		generate: generate,

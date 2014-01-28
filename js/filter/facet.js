@@ -1,10 +1,10 @@
-define(['jQuery', 'dict', 'tooltip', 'doT'], function($, dict, tooltip, doT){
+define(['jQuery', 'dict', 'tooltip', 'doT', 'jQueryUI'], function($, dict, tooltip, doT){
 
 	// facets = { facetname1: [facet1, facet2, facet3], facetname2: [facet4, facet5] }
 	var facets = {};	
 	var facetTemplate = '<li><input type="checkbox" name="{{=it.facetname}}" value="{{=it.facet}}" class="{{=it.cls}}" id="{{=it.id}}" {{? it.checked }}checked{{?}}/><label for="{{=it.id}}">{{=it.label}}</label></li>',
 	facetRenderer = doT.template(facetTemplate);
-
+	var autocompletefacets = {};
 
 	var me = {};
 	
@@ -12,26 +12,55 @@ define(['jQuery', 'dict', 'tooltip', 'doT'], function($, dict, tooltip, doT){
 		var facets = kwargs.facets;
 		var facethtml = "";
         for( var facet in facets ){
-            var content = "";
             var facetLength = facets[facet].length;
-            for ( var i=0; i < facetLength; i+=2 ) {
-                var facetdata = {
-                    facetname: facet,
-                    facet: facets[facet][i],
-                    label: dict.get(facets[facet][i]),
-                    count: facets[facet][i+1],
-                    cls: 'facetcheckbox',
-                    id: facet+'_'+facets[facet][i].replace(/\W/g,'')
-                }
-                content += facetRenderer(facetdata);
+            var content = "";
+
+            // If facet has less than 10 items, do a checkbox-list
+            if( facetLength < 10 ) {
+	            for ( var i=0; i < facetLength; i+=2 ) {
+	                var facetdata = {
+	                    facetname: facet,
+	                    facet: facets[facet][i],
+	                    label: dict.get(facets[facet][i]),
+	                    count: facets[facet][i+1],
+	                    cls: 'facetcheckbox',
+	                    id: facet+'_'+facets[facet][i].replace(/\W/g,'')
+	                }
+	                content += facetRenderer(facetdata);
+	            }
+	            content = '<ul>'+content+'</ul>';
+
+	        // If facet has more than, do a autocomplete add-list
+            } else {
+            	content = '<input type="text" class="autocompletefacet" id="'+facet+'_ac" name="'+facet+'"/><div id="'+facet+'_container"></div>';
+            	var resultArray = [];
+				// Build list for autocomplete, removing facetcounters
+				for(var i = facets[facet].length-1; i--;){
+					var b = facets[facet][i];
+					if (typeof b !== "number" && b !== "") resultArray.push( b );
+				};
+            	autocompletefacets[facet] = resultArray;
+            	console.log('Autocomplete:', autocompletefacets);
             }
-            var facetfilter = "";
-            // Insert textinput for filtering the list of checkboxes for lists longer than 10 items
-            if( facetLength > 10 ) facetfilter = '<input type="text" class="facetfilter"/>';
-            facethtml += '<div><h2 '+tooltip.get(facet.replace('_exact',''))+'>'+dict.get(facet.replace('_exact',''))+'</h2>'+facetfilter+'<ul>'+content+'</ul></div>';
+            facethtml += '<div><h2 '+tooltip.get(facet.replace('_exact',''))+'>'+dict.get(facet.replace('_exact',''))+'</h2>'+content+'</div>';
         };
         return facethtml;
 	}
+
+	me.bindInput = function() {
+		for( var acfacet in autocompletefacets ) {
+			$('#'+acfacet+'_ac').autocomplete({
+				source: autocompletefacets[acfacet],
+				select: function( event, ui ) {
+					$('#'+this.name+'_container').append('<button class="removeFacetBtn" name="'+acfacet+'">'+ui.item.value+'</button>');
+					addFacet(ui.item.value, acfacet);
+					this.value="";
+					return false;
+				}
+			});
+		}
+	}
+
 	me.getSolrParams = function() {
         var results = [];
         var result = "";
@@ -71,23 +100,29 @@ define(['jQuery', 'dict', 'tooltip', 'doT'], function($, dict, tooltip, doT){
 
 	function toggleFacet(facet,facetname,t) {
 		// fq:['location:(oslo OR gothenburg)','department:software engineering']
-		var facetentry = facetname+":"+facet;
 		if(t){
 			addFacet(facet, facetname);
 		} else {
 			removeFacet(facet, facetname);
 		}
-		$(document).trigger('filterUpdate');
 	}
 
 	function addFacet(facet, facetname) {
 		if(facets[facetname] === undefined)
 			facets[facetname] = [];
 		facets[facetname].push(facet);
+		$(document).trigger('filterUpdate');
 	}
 
 	function removeFacet(facet, facetname) {
-		removeFromArray(facets[facetname], facet)
+		removeFromArray(facets[facetname], facet);
+		$(document).trigger('filterUpdate');
+	}
+
+	function removeFacetBtnClick(t) {
+		console.log(t.name, t.innerHTML);
+		removeFacet(t.innerHTML, t.name);
+		$(t).remove();
 	}
 
 /* Helper functions */
@@ -108,6 +143,7 @@ define(['jQuery', 'dict', 'tooltip', 'doT'], function($, dict, tooltip, doT){
 
 	// Search listeners
 	$('#searchfacets').on('keyup','.facetfilter', function() { filterFacetList(this) } );
+	$('#searchfacets').on('click','.removeFacetBtn', function() { removeFacetBtnClick(this) } );
 	$('#searchfacets').on('change','.facetcheckbox', function() { toggleFacet(this.value, this.name, this.checked) } );
 
 	return me;
