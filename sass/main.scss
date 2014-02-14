@@ -132,7 +132,7 @@ h1 {
 	}
 }
 
-button, input[type=submit] {
+button, input[type=submit], .butt {
 	@include hoverbg($activeColor);
 	@include pop;
 	background-color: $inputColor;
