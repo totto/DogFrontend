@@ -3,7 +3,7 @@ DogFrontend
 
 DogFrontend is a tool to search for dogs registered with NKK. 
 
-![Screenshot](https://raw.github.com/NKK-IT-Utvikling/DogPopulationFrontend/master/media/screenshot.png)
+![Screenshot](https://raw.github.com/NKK-IT-Utvikling/DogFrontend/master/media/screenshot.png)
 
 ### Dependencies
 
