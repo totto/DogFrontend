@@ -16,7 +16,7 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict){
 	me.getAdditionalParams = function() {
 		var params = [];
 		for( key in queries ) {
-			if(queries[key] != '') {
+			if(queries[key] !== '') {
 				params.push( 'json_detailed:"' + key + ' ' + queries[key] + '"~25' );
 			}
 		}

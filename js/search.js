@@ -221,6 +221,7 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 
     // Document listeners
     $(document).on('doSearch', function() { run() });
+    $(document).on('prepSearch', function() { prep() });
     $(document).on('filterUpdate', function() { buildSearchSummary() });
 
 	return {
