@@ -136,6 +136,7 @@ button, input[type=submit], .butt {
 	@include hoverbg($activeColor);
 	@include pop;
 	background-color: $inputColor;
+	vertical-align: middle;
 	border: none;
 	font: inherit;
 	padding: .4em .8em;
