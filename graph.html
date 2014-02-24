@@ -12,7 +12,7 @@
 
       function getDogs(query) {
         if(typeof query === "undefined") query="";
-        var url = "dogservice/dogs/select";
+        var url = "/dogservice/dogs/select";
         var req = new XMLHttpRequest();
         req.open("GET", url+'?wt=json&indent=true'+query, false);
         req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
