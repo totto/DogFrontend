@@ -118,7 +118,11 @@
 			<h1>{{=it.name}}</h1>
 			<dl>
 				<dt>Rase</dt>
-				<dd>{{=it.breed}} - <a href="http://dogid.nkk.no/ras/?breed={{=it.breed}}" target="_blank">Vis rasestatistikk</a></dd>
+				<dd>
+					{{=it.breed}} 
+					- <a href="http://dogid.nkk.no/ras/?breed={{=it.breed}}" target="_blank">Vis rasestatistikk</a>
+					{{?it.breedObject}}- <a href="{{=it.breedObject.readmoreurl}}" target="_blank">Les om denne rasen hos NKK</a>{{?}}
+					</dd>
 				<dt>Født</dt>
 				<dd>{{?it.born}}{{=it.born}}{{??}}Mangler fødselsdato{{?}}</dd>
 				<dt>Kjønn</dt>
