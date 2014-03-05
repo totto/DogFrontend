@@ -177,7 +177,7 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 						var l = initData[key].length;
 						for(k=l-1; k>=0; k--) {
 							var fieldSearch = initData[key][k].split('_');
-							$('#'+fieldSearch[0]+'_q').val(fieldSearch[1]).trigger('change');
+							$('#'+fieldSearch[0]+'_q').val( decodeURI(fieldSearch[1]) ).trigger('change');
 						}
 						break;
 					case 'source':

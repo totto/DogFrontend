@@ -24,7 +24,13 @@ define(['jQuery', 'config', 'doT'], function($, conf, doT){
 
 	// Detailview listeners
 	$('#searchresults').on('click','.member', function() {
-		show( detailRenderer( conf.bufferedData.response.docs[this.id] ) );
+		var thisDog = conf.bufferedData.response.docs[this.id];
+		// Temporary force import of breed
+		$.ajax({
+			url: 'http://dogid.nkk.no/dogpopulation/graph/breed/import/'+thisDog.breed,
+			dataType: 'jsonp'
+		});
+		show( detailRenderer( thisDog ) );
 	});
 	$('#detailmask').click( function() { hide() } );
 	$('#detail').on('click','button', function() { hide() } );
