@@ -18,6 +18,7 @@ define(['require', 'filter/modules', 'config', 'pagenav'], function(require, mod
         var params = runModuleMethod('getSolrParams');
         conf.solr.data.fq = params;
         conf.additionalParams = runModuleMethod('getAdditionalParams').join(' ');
+        conf.solr.data.q = "{!q.op=AND}" + conf.filterTxt + ' ' + conf.additionalParams;
         pagenav.go(1);
     }
 
