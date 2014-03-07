@@ -186,7 +186,7 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 					case 'breed':
 						for(i=0, l = initData[key].length; i<l; i++) {
 							if( typeof initData[key][i] !== 'undefined' ) {
-								facet.addFacetBtn(key, initData[key][i], 'breed' );
+								facet.addFacetBtn(key, decodeURI( initData[key][i] ), 'breed' );
 							}
 						}
 					default:
