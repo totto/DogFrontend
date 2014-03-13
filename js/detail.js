@@ -43,7 +43,7 @@ define(['jQuery', 'config', 'doT', 'breeds'], function($, conf, doT, breeds){
 		}
 		/* Temporary force import of breed */
 		$.ajax({
-			url: 'http://dogid.nkk.no/dogpopulation/graph/breed/import/'+thisDog.breed,
+			url: 'http://dogpopulation.nkk.no/dogpopulation/graph/breed/import/'+thisDog.breed,
 			dataType: 'jsonp'
 		});
 	});

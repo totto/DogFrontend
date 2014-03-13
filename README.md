@@ -21,4 +21,4 @@ Currently, the different services are expected to live at:
 
 * http://your.url/ <-- index.html
 * http://your.url/dogservice/dogs/select <-- DogService dogsearch endpoint
-* http://dogid.nkk.no/ <- DogPopulationFrontend for Pedigree view
+* http://dogpopulation.nkk.no/ <- DogPopulationFrontend for Pedigree view
