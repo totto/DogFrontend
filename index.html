@@ -120,7 +120,7 @@
 				<dt>Rase</dt>
 				<dd>
 					{{=it.breed}} 
-					- <a href="http://dogid.nkk.no/ras/?breed={{=it.breed}}" target="_blank">Vis rasestatistikk</a>
+					- <a href="http://dogpopulation.nkk.no/ras/?breed={{=it.breed}}" target="_blank">Vis rasestatistikk</a>
 					{{?it.breedObject}}- <a href="{{=it.breedObject.readmoreurl}}" target="_blank">Les om denne rasen hos NKK</a>{{?}}
 					</dd>
 				<dt>Født</dt>
@@ -174,7 +174,7 @@
 					<dt>Mor</dt>
 					<dd>{{=it.details.ancestry.mother.name}} {{?it.details.ancestry.father.breed}}({{=it.details.ancestry.mother.breed.name}}){{?}}</dd>
 				{{?}}
-				<dt><a href="http://dogid.nkk.no/?query={{=it.id}}" target="_blank" class="butt" style="display: inline-block; text-decoration: none;">Vis stamtavle  <img src="img/pedigree.png" style="max-width: 24px; vertical-align: middle;"></a></dt>
+				<dt><a href="http://dogpopulation.nkk.no/?query={{=it.id}}" target="_blank" class="butt" style="display: inline-block; text-decoration: none;">Vis stamtavle  <img src="img/pedigree.png" style="max-width: 24px; vertical-align: middle;"></a></dt>
 
 				{{?it.details.showResults}}
 					<dt>Resultater fra utstillinger</dt>
