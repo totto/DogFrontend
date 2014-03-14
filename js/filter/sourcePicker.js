@@ -7,7 +7,7 @@ define(['jQuery','tooltip','dict'], function($, tooltip, dict){
 	var source = 'NO';
 	var source_param = {
 		ALL: '',
-		NO: '-postalCode:Sweden -postalCode:Finland',
+		NO: '', //'-postalCode:Sweden -postalCode:Finland',
 		SE: 'postalCode:Sweden',
 		FI: 'postalCode:Finland'
 	}

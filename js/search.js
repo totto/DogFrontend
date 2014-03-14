@@ -29,6 +29,7 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 			if(firstrun) {
 				filter.show(data.facet_counts.facet_fields);
 				applyInitData();
+				conf.solr.data.facet='false';
 				firstrun = false;
 			}
 			updateUrl();
@@ -177,7 +178,7 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 						var l = initData[key].length;
 						for(k=l-1; k>=0; k--) {
 							var fieldSearch = initData[key][k].split('_');
-							$('#'+fieldSearch[0]+'_q').val(fieldSearch[1]).trigger('change');
+							$('#'+fieldSearch[0]+'_q').val( decodeURI(fieldSearch[1]) ).trigger('change');
 						}
 						break;
 					case 'source':
@@ -186,9 +187,10 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 					case 'breed':
 						for(i=0, l = initData[key].length; i<l; i++) {
 							if( typeof initData[key][i] !== 'undefined' ) {
-								facet.addFacetBtn(key, initData[key][i], 'breed' );
+								facet.addFacetBtn(key, decodeURI( initData[key][i] ), 'breed' );
 							}
 						}
+						break;
 					default:
 					for(i=0, l = initData[key].length; i<l; i++) {
 						if( typeof initData[key][i] !== 'undefined' ) {

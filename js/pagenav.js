@@ -35,7 +35,7 @@ define(['jQuery', 'doT', 'config'], function($, doT, conf){
 	function go(pageNum) {
 		currentPage = pageNum;
 		conf.solr.data.start = (currentPage-1) * conf.solr.data.rows;
-		$(document).trigger('prepSearch');
+		$(document).trigger('doSearch');
 	}
 
 	function prev() {

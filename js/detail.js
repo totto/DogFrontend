@@ -1,5 +1,5 @@
 /* Details */
-define(['jQuery', 'config', 'doT'], function($, conf, doT){
+define(['jQuery', 'config', 'doT', 'breeds'], function($, conf, doT, breeds){
 
 	dogDetailTemplate = $('#detailtemplate').text();
 	detailRenderer = doT.template(dogDetailTemplate);
@@ -20,11 +20,32 @@ define(['jQuery', 'config', 'doT'], function($, conf, doT){
 		$('#detail').show(200);
 	}
 
+	function renderDetailDog(thisDog) {
+		if( typeof thisDog.breedObject == 'undefined') {
+			thisDog.breedObject = breeds.getObjByName( thisDog.breed );
+		}
+		show( detailRenderer( thisDog ) );
+	}
+
 	var KEYCODE_ESC = 27;
 
 	// Detailview listeners
 	$('#searchresults').on('click','.member', function() {
-		show( detailRenderer( conf.bufferedData.response.docs[this.id] ) );
+		var thisDog = conf.bufferedData.response.docs[this.id];
+
+		if( breeds.list.length < 1 ){
+	        $.ajax('js/lib/Raser.json').done(function(data){
+	        	breeds.list = data.breed;
+	        	renderDetailDog(thisDog);
+			});
+		} else {
+			renderDetailDog(thisDog);
+		}
+		/* Temporary force import of breed */
+		$.ajax({
+			url: 'http://dogpopulation.nkk.no/dogpopulation/graph/breed/import/'+thisDog.breed,
+			dataType: 'jsonp'
+		});
 	});
 	$('#detailmask').click( function() { hide() } );
 	$('#detail').on('click','button', function() { hide() } );
