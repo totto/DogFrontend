@@ -29,6 +29,7 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 			if(firstrun) {
 				filter.show(data.facet_counts.facet_fields);
 				applyInitData();
+				conf.solr.data.facet='false';
 				firstrun = false;
 			}
 			updateUrl();
