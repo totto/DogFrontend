@@ -516,6 +516,11 @@ label, button {
 		border-radius: $paddingSmall;
 	}
 
+
+	.nkklogo {
+		display:none;
+	}
+
 @media screen and (min-width: 800px) {
 	header {
 		position: fixed;
@@ -547,5 +552,9 @@ label, button {
 	}
 	#detailcontent {
 		left: $navWidth+$margin*2;
+	}
+	.nkklogo {
+		display:block;
+		padding:0 !important
 	}
 }
