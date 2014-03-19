@@ -1,5 +1,5 @@
 require.config({
-    urlArgs: "nocache=" + (new Date()).getTime(), // Prevent caching
+    //urlArgs: "nocache=" + (new Date()).getTime(), // Prevent caching
     paths: {
         'jQuery': 'http://code.jquery.com/jquery-latest.min',
         'jQueryUI': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min',

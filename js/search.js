@@ -1,11 +1,23 @@
 /* Search */
 define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, filter, pagenav, doT, facet) {
 
-	var initiated = false,
-	firstrun = true,
+	var firstrun = true,
 	searchrequest;
 	var tableTemplate = $('#tabletemplate').text();
 	var tableRenderer = doT.template(tableTemplate);
+
+	function initiateFacets() {
+		$.get('facets.php', function(data){
+			data = jQuery.parseJSON( data );
+			filter.show(data.facet_counts.facet_fields);
+			applyInitData();
+			conf.solr.data.facet='false';
+			firstrun = false;
+		}).fail(function(){
+			console.log('Using cached facets failed...');
+			run();
+		});
+	}
 
 	function prep(t) {
 		currentPage = 1;
@@ -15,7 +27,11 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 			conf.filterTxt = '*';
 		}
 		conf.solr.data.q = "{!q.op=AND}" + conf.filterTxt + ' ' + conf.additionalParams;
-		run();
+		if(firstrun){
+			initiateFacets();
+		} else {
+			run();
+		}
 	}
 
 	function run() {
@@ -200,7 +216,6 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 				}
 			}
 		}
-		initiated = true;
 		prep();
 	}
 
