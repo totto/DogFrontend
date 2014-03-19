@@ -7,8 +7,7 @@ define(['config', 'filter', 'pagenav', 'doT', 'filter/facet'], function(conf, fi
 	var tableRenderer = doT.template(tableTemplate);
 
 	function initiateFacets() {
-		$.get('facets.php', function(data){
-			data = jQuery.parseJSON( data );
+		$.get('facets.json', function(data){
 			filter.show(data.facet_counts.facet_fields);
 			applyInitData();
 			conf.solr.data.facet='false';
