@@ -290,6 +290,9 @@ label, button {
 	position: relative;
 	z-index: 11;
 }
+#pageinput {
+	width: 4em;
+}
 
 // Detailview
 
@@ -414,25 +417,17 @@ label, button {
 
 	ul {
 		@include item;
-		visibility: hidden;
+		display:none;
 		position: relative;
-		z-index: 10;
+		z-index: 999;
 		top:30px;
-		opacity: 0;
 		overflow: hidden;
 		border-bottom: 2px solid #ccc;
 		border-left: 1px solid #ccc;
 		border-right: 1px solid #ccc;
-		-webkit-transition: all 0.3s ease;
-		-moz-transition: all 0.3s ease;
-		transition: all 0.3s ease; 
 	}
 	input:checked ~ ul {
-		visibility: visible;
-		opacity: 1;
-		-webkit-transform: translateY(3px);
-		-moz-transform: translateY(3px);
-		transform: translateY(3px);
+		display:block;
 	}
 }
 
@@ -521,6 +516,18 @@ label, button {
 		display:none;
 	}
 
+
+#searchoptionstoggle {
+	display: block;
+}
+
+#searchoptions {
+	display: none;
+}
+.showoptions {
+	display: block !important
+}
+
 @media screen and (min-width: 800px) {
 	header {
 		position: fixed;
@@ -543,7 +550,11 @@ label, button {
 		width: $navWidth; 
 		overflow: hidden; 
 	}
+	#searchoptionstoggle {
+		display: none;
+	}
 	#searchoptions {
+		display: block !important;
 		position: fixed;
 		left:$margin;
 		top: $headerHeight+$margin+$padding;
