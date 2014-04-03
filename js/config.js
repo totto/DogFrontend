@@ -12,10 +12,8 @@ define([], function() {
                 q:'*',
                 wt:'json',
                 indent:'true',
-                facet:'true',
-                'facet.field': ['breed', 'gender'],
-                'facet.limit':'-1',
-                sort: 'name asc',
+                facet:'false',
+                sort: 'timestamp desc',
                 fl: '*',
                 rows:50,
                 start:0
