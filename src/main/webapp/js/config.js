@@ -1,6 +1,6 @@
 /* App configuration */
 define([], function() {
-    var solrurl = "/dogservice/dogs/select";
+    var solrurl = "solr/select";
     var me = {
         bufferedData: {},
         filterTxt: '',

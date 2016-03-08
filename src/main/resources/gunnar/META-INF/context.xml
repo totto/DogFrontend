@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/nkksql" auth="Container" type="com.jolbox.bonecp.BoneCPDataSource"
+              driverClass="net.sourceforge.jtds.jdbc.Driver"
+              factory="org.apache.naming.factory.BeanFactory"
+              username="nvWebapprw" password="LeastEasilyAway11"
+              jdbcUrl="jdbc:jtds:sqlserver://10.241.77.4:1433;instance=inttest;DatabaseName=nkksql"/>
+</Context>
