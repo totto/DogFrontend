@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter  {
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
         http
                 .authorizeRequests()
-                .antMatchers("/**").hasAnyRole("G10")
+                .antMatchers("/**").hasAnyRole("1457703534240")
                 .anyRequest().authenticated();
         http
                 .exceptionHandling().accessDeniedPage("/403")
